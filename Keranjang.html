@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Login - AlatCampingKu</title>
+    <title>Keranjang - AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -30,6 +30,36 @@
 </head>
 
 <body>
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark py-3 px-lg-5 d-none d-lg-block">
+        <div class="row">
+            <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
+                <div class="d-inline-flex align-items-center">
+                </div>
+            </div>
+            <div class="col-md-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-body px-3" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-body px-3" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-body px-3" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-body px-3" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-body pl-3" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="position-relative px-lg-5" style="z-index: 9;">
@@ -37,41 +67,70 @@
                 <a href="index.html" class="navbar-brand">
                     <h1 class="text-uppercase text-primary mb-1">AlatCampingKu</h1>
                 </a>
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
+                    <div class="navbar-nav ml-auto py-0">
+                        <a href="indexx.html" class="nav-item nav-link">Home</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                <a href="product.html" class="dropdown-item">Tenda</a>
+                                <a href="product.html" class="dropdown-item">Backpack</a>
+                                <a href="product.html" class="dropdown-item">Kompor</a>
+                            </div>
+                        </div>
+                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        <a href="adminpanel.html" class="nav-item nav-link">Admin Panel</a>
+                        <a href="keranjang.html" class="nav-item nav-link active">Keranjang</a>
+                    </div>
+                </div>
             </nav>
         </div>
     </div>
     <!-- Navbar End -->
 
-    <!-- Login Start -->
-    <div class="container-fluid py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-6">
-                <div class="bg-white rounded p-5 shadow">
-                    <h3 class="text-center text-dark mb-4">Login</h3>
-                    <form>
-                        <div class="form-group">
-                            <label class="text-dark" for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter email">
-                        </div>
-                        <div class="form-group">
-                            <label class="text-dark" for="password">Password</label>
-                            <input type="password" class="form-control" id="password" placeholder="Password">
-                        </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="remember">
-                            <label class="form-check-label text-dark" for="remember">Remember me</label>
-                        </div>
-                        <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='indexx.html';">Login</button>
-                    </form>
-                    <p class="text-center text-dark mt-3">Don't have an account? <a href="register.html" class="text-primary">Sign up</a></p>
-                </div>
-            </div>
+    <!-- Cart Start -->
+    <div class="container my-5 py-5">
+        <h2 class="text-center mb-4">Keranjang Belanja</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Produk</th>
+                    <th scope="col">Nama</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Jumlah</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample Item 1 -->
+                <tr>
+                    <td><img src="TendaCamping.png" alt="Product" style="width: 100px;"></td>
+                    <td>Tenda Camping</td>
+                    <td>Rp. 50.000</td>
+                    <td>
+                        <input type="number" class="form-control" value="1" min="1">
+                    </td>
+                    <td>Rp. 50.000</td>
+                    <td><button class="btn btn-danger">Hapus</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+            <h4>Total: Rp. 50.000</h4>
+        </div>
+        <div class="d-flex justify-content-between mt-4">
+            <a href="index.html" class="btn btn-secondary">Lanjut Belanja</a>
+            <a href="checkout.html" class="btn btn-primary">Checkout</a>
         </div>
     </div>
-    <!-- Login End -->
+    <!-- Cart End -->
 
     <!-- Footer Start -->
-    <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5">
+    <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
         <div class="row pt-5">
             <div class="col-lg-3 col-md-6 mb-5">
                 <h4 class="text-uppercase text-light mb-4">Get In Touch</h4>
