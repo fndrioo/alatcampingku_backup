@@ -27,39 +27,31 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        /* Mengatur tinggi carousel */
+        #header-carousel .carousel-item img {
+            height: 650px; /* Sesuaikan tinggi sesuai kebutuhan */
+            object-fit: cover;
+        }
+
+        /* Mengatur ukuran font di dalam carousel */
+        #header-carousel .carousel-caption h4 {
+            font-size: 1.75rem; /* Sesuaikan ukuran font untuk teks kecil */
+        }
+
+        #header-carousel .carousel-caption h1 {
+            font-size: 3rem; /* Sesuaikan ukuran font untuk teks besar */
+        }
+
+        #header-carousel .carousel-caption .btn {
+            font-size: 1.25rem; /* Sesuaikan ukuran font untuk tombol */
+            padding: 12px 25px; /* Sesuaikan padding tombol */
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Topbar Start -->
-    <div class="container-fluid bg-dark py-3 px-lg-5 d-none d-lg-block">
-        <div class="row">
-            <div class="col-md-6 text-center text-lg-left mb-2 mb-lg-0">
-                <div class="d-inline-flex align-items-center">
-                </div>
-            </div>
-            <div class="col-md-6 text-center text-lg-right">
-                <div class="d-inline-flex align-items-center">
-                    <a class="text-body px-3" href="">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a class="text-body px-3" href="">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a class="text-body px-3" href="">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a class="text-body px-3" href="">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="text-body pl-3" href="">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Topbar End -->
-
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="position-relative px-lg-5" style="z-index: 9;">
@@ -130,6 +122,48 @@
         </div>
     </div>
     <!-- Carousel End -->
+
+    <!-- Produk Unggulan Start -->
+<div class="container-fluid py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="text-uppercase">Produk Unggulan</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <img src="img/TendaCamping.png" class="card-img-top" alt="Tenda">
+                    <div class="card-body">
+                        <h5 class="card-title">Tenda Patagonia</h5>
+                        <p class="card-text">Harga Sewa: Rp. 50.000 /Hari</p>
+                        <a href="#" class="btn btn-primary">Detail Produk</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <img src="img/backpack1.png" class="card-img-top" alt="Backpack">
+                    <div class="card-body">
+                        <h5 class="card-title">Tas Decathlon 30L</h5>
+                        <p class="card-text">Harga Sewa: Rp. 30.000 /Hari</p>
+                        <a href="#" class="btn btn-primary">Detail Produk</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card">
+                    <img src="img/portablestove.png" class="card-img-top" alt="Kompor">
+                    <div class="card-body">
+                        <h5 class="card-title">Kompor Portable</h5>
+                        <p class="card-text">Harga Sewa: Rp. 20.000 /Hari</p>
+                        <a href="#" class="btn btn-primary">Detail Produk</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Produk Unggulan End -->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
