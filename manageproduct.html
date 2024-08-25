@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Admin Panel - AlatCampingKu</title>
+    <title>Manage Products - Admin Panel AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -55,10 +55,10 @@
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
                         <a href="adminpanel.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manageproduct.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
-                        <a href="manageorder.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manageuser.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
-                        <a href="adminsettings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
+                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light active">Manage Products</a>
+                        <a href="manage-orders.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manage-users.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
+                        <a href="settings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
             </div>
@@ -67,61 +67,59 @@
             <!-- Main Content Start -->
             <div class="col-lg-10">
                 <div class="container p-4">
-                    <h2>Dashboard</h2>
-                    <p>Welcome to the admin panel of AlatCampingKu. Here you can manage all the aspects of the website.</p>
+                    <h2>Manage Products</h2>
+                    <p>Here you can manage all the products listed on AlatCampingKu.</p>
                     
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card text-white bg-primary mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Products</h5>
-                                    <p class="card-text">3</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-secondary mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Orders</h5>
-                                    <p class="card-text">2</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-success mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Users</h5>
-                                    <p class="card-text">1</p>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- Add Product Button -->
+                    <div class="mb-4">
+                        <button class="btn btn-primary">Add New Product</button>
                     </div>
 
-                    <h3>Recent Orders</h3>
+                    <!-- Products Table -->
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Order ID</th>
-                                <th>User</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>John Doe</td>
-                                <td>$150</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-primary">View</button></td>
+                                <td>Tenda Patagonia</td>
+                                <td>Tenda</td>
+                                <td>Rp. 50.000</td>
+                                <td>5</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>2</td>
-                                <td>Jane Smith</td>
-                                <td>$200</td>
-                                <td>Completed</td>
-                                <td><button class="btn btn-sm btn-primary">View</button></td>
+                                <td>Backpack Adventure</td>
+                                <td>Backpack</td>
+                                <td>Rp. 30.000</td>
+                                <td>10</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Kompor Portable</td>
+                                <td>Kompor</td>
+                                <td>Rp. 20.000</td>
+                                <td>15</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

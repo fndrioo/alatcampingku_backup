@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Settings - Admin Panel AlatCampingKu</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-secondary navbar-dark py-3 px-4">
+        <a href="index.html" class="navbar-brand">
+            <h1 class="text-uppercase text-primary mb-1">Admin Panel - AlatCampingKu</h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="navbar-nav ml-auto py-0">
+                <a href="index.html" class="nav-item nav-link">Home</a>
+                <a href="logout.html" class="nav-item nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Start -->
+            <div class="col-lg-2 bg-dark">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    <h4 class="text-light">Admin Menu</h4>
+                    <div class="list-group list-group-flush w-100">
+                        <a href="dashboard.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="manage-orders.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manage-users.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
+                        <a href="settings.html" class="list-group-item list-group-item-action bg-dark text-light active">Settings</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Sidebar End -->
+
+            <!-- Main Content Start -->
+            <div class="col-lg-10">
+                <div class="container p-4">
+                    <h2>Settings</h2>
+                    <p>Manage the settings of your AlatCampingKu website here.</p>
+
+                    <!-- General Settings Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">General Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="siteName">Website Name</label>
+                                    <input type="text" class="form-control" id="siteName" value="AlatCampingKu">
+                                </div>
+                                <div class="form-group">
+                                    <label for="adminEmail">Admin Email</label>
+                                    <input type="email" class="form-control" id="adminEmail" value="admin@alatcampingku.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="siteDescription">Website Description</label>
+                                    <textarea class="form-control" id="siteDescription" rows="3">Your one-stop solution for camping gear rentals.</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">Security Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="password">Change Admin Password</label>
+                                    <input type="password" class="form-control" id="password" placeholder="New Password">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm New Password">
+                                </div>
+                                <button type="submit" class="btn btn-secondary">Update Password</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Notification Settings Section -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Notification Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="emailNotifications">Email Notifications</label>
+                                    <select class="form-control" id="emailNotifications">
+                                        <option value="enabled" selected>Enabled</option>
+                                        <option value="disabled">Disabled</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="smsNotifications">SMS Notifications</label>
+                                    <select class="form-control" id="smsNotifications">
+                                        <option value="enabled">Enabled</option>
+                                        <option value="disabled" selected>Disabled</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success">Save Notification Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Content End -->
+        </div>
+    </div>
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
+        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
+        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
