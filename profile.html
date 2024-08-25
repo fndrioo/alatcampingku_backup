@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>AlatCampingKu</title>
+    <title>Profil - AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -29,24 +29,8 @@
     <link href="css/style.css" rel="stylesheet">
 
     <style>
-        /* Mengatur tinggi carousel */
-        #header-carousel .carousel-item img {
-            height: 650px; /* Sesuaikan tinggi sesuai kebutuhan */
-            object-fit: cover;
-        }
-
-        /* Mengatur ukuran font di dalam carousel */
-        #header-carousel .carousel-caption h4 {
-            font-size: 1.75rem; /* Sesuaikan ukuran font untuk teks kecil */
-        }
-
-        #header-carousel .carousel-caption h1 {
-            font-size: 3rem; /* Sesuaikan ukuran font untuk teks besar */
-        }
-
-        #header-carousel .carousel-caption .btn {
-            font-size: 1.25rem; /* Sesuaikan ukuran font untuk tombol */
-            padding: 12px 25px; /* Sesuaikan padding tombol */
+        .wider-container {
+            max-width: 80%;
         }
     </style>
 </head>
@@ -64,19 +48,12 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Home</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="product.html" class="dropdown-item">Tenda</a>
-                                <a href="product.html" class="dropdown-item">Backpack</a>
-                                <a href="product.html" class="dropdown-item">Kompor</a>
-                            </div>
-                        </div>
+                        <a href="index.html" class="nav-item nav-link">Home</a>
+                        <a href="product.html" class="nav-item nav-link">Kategori Peralatan</a>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
                         <a href="adminpanel.html" class="nav-item nav-link">Admin Panel</a>
                         <a href="keranjang.html" class="nav-item nav-link">Keranjang</a>
-                        <a href="profile.html" class="nav-item nav-link">Profil</a>
+                        <a href="profile.html" class="nav-item nav-link active">Profil</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
@@ -85,86 +62,49 @@
     </div>
     <!-- Navbar End -->
 
-    <!-- Carousel Start -->
-    <div class="container-fluid p-0" style="margin-bottom: 0;">
-        <div id="header-carousel" class="carousel slide" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img class="w-100" src="img/CarouselCamping.jpg" alt="Image">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Sewa Peralatan Outdoor Sekarang.</h4>
-                            <h1 class="display-1 text-white mb-md-4">Kita Menyediakan Peralatan Outdoor Yang Berkualitas.</h1>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 mt-2">Order Sekarang</a>
+    <!-- Profile Section Start -->
+    <div class="container-fluid py-5 bg-light">
+        <div class="container wider-container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h3 class="m-0">Profil Saya</h3>
                         </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <img class="w-100" src="img/carouselcamp.jpg" alt="Image">
-                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
-                            <h4 class="text-white text-uppercase mb-md-3">Sewa Peralatan Outdoor Sekarang.</h4>
-                            <h1 class="display-1 text-white mb-md-4">Kita Menyediakan Peralatan Outdoor Yang Berkualitas.</h1>
-                            <a href="" class="btn btn-primary py-md-3 px-md-5 mt-2">Order Sekarang!</a>
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                <img src="img/profileimg.png" class="rounded-circle" alt="Profile Image" width="200" height="200">
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label for="name">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="name" value="John Doe">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" value="johndoe@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Nomor Telepon</label>
+                                    <input type="tel" class="form-control" id="phone" value="+1234567890">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Alamat</label>
+                                    <textarea class="form-control" id="address" rows="3">123 Street, New York, USA</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" class="form-control" id="password" value="password123">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Update Profil</button>
+                            </form>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-                <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                    <span class="carousel-control-prev-icon mb-n2"></span>
-                </div>
-            </a>
-            <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-                <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                    <span class="carousel-control-next-icon mb-n2"></span>
-                </div>
-            </a>
-        </div>
-    </div>
-    <!-- Carousel End -->
-
-    <!-- Produk Unggulan Start -->
-<div class="container-fluid py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="text-uppercase">Produk Unggulan</h2>
-        </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="img/TendaCamping.png" class="card-img-top" alt="Tenda">
-                    <div class="card-body">
-                        <h5 class="card-title">Tenda Patagonia</h5>
-                        <p class="card-text">Harga Sewa: Rp. 50.000 /Hari</p>
-                        <a href="#" class="btn btn-primary">Detail Produk</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="img/backpack1.png" class="card-img-top" alt="Backpack">
-                    <div class="card-body">
-                        <h5 class="card-title">Tas Decathlon 30L</h5>
-                        <p class="card-text">Harga Sewa: Rp. 30.000 /Hari</p>
-                        <a href="#" class="btn btn-primary">Detail Produk</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="img/portablestove.png" class="card-img-top" alt="Kompor">
-                    <div class="card-body">
-                        <h5 class="card-title">Kompor Portable</h5>
-                        <p class="card-text">Harga Sewa: Rp. 20.000 /Hari</p>
-                        <a href="#" class="btn btn-primary">Detail Produk</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Produk Unggulan End -->
+    <!-- Profile Section End -->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
@@ -208,11 +148,11 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
-        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
-		
-		<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->					
-        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
+    <div class="container-fluid bg-dark text-white-50 py-4 px-sm-3 px-md-5">
+        <p class="m-0 text-center text-white">
+            &copy; <a class="text-white" href="#">AlatCampingKu</a>. All Rights Reserved. Designed by
+            <a class="text-white" href="https://htmlcodex.com">HTML Codex</a>
+        </p>
     </div>
     <!-- Footer End -->
 
@@ -223,11 +163,14 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
