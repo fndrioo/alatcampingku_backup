@@ -124,6 +124,24 @@
             }
         }
     });
-    
+
+    const ready = $(document).ready;
+    ready(function(){
+        $("#scrollToProdukUnggulan").on('click', function(event) {
+            // Pastikan tautan tidak langsung melompat ke bagian target
+            event.preventDefault();
+
+            // Mengambil nilai dari href, yaitu ID target
+            var target = $(this).attr('href');
+
+            // Animasi scroll ke target dengan kecepatan 800ms
+            $('html, body').animate({
+                scrollTop: $(target).offset().top
+            }, 800, function(){
+                // Opsional: Mengubah URL dengan ID target setelah scroll
+                window.location.hash = target;
+            });
+        });
+    });
 })(jQuery);
 

@@ -27,28 +27,6 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
-
-    <style>
-        /* Mengatur tinggi carousel */
-        #header-carousel .carousel-item img {
-            height: 650px; /* Sesuaikan tinggi sesuai kebutuhan */
-            object-fit: cover;
-        }
-
-        /* Mengatur ukuran font di dalam carousel */
-        #header-carousel .carousel-caption h4 {
-            font-size: 1.75rem; /* Sesuaikan ukuran font untuk teks kecil */
-        }
-
-        #header-carousel .carousel-caption h1 {
-            font-size: 3rem; /* Sesuaikan ukuran font untuk teks besar */
-        }
-
-        #header-carousel .carousel-caption .btn {
-            font-size: 1.25rem; /* Sesuaikan ukuran font untuk tombol */
-            padding: 12px 25px; /* Sesuaikan padding tombol */
-        }
-    </style>
 </head>
 
 <body>
@@ -84,89 +62,65 @@
     </div>
     <!-- Navbar End -->
 
-   <!-- Carousel Start -->
-<div class="container-fluid p-0" style="margin-bottom: 0;">
-    <div id="header-carousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="w-100" src="img/CarouselCamping.jpg" alt="Image">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase mb-md-3">Sewa Peralatan Outdoor Sekarang.</h4>
-                        <h1 class="display-1 text-white mb-md-4">Kita Menyediakan Peralatan Outdoor Yang Berkualitas.</h1>
-                        <a href="#produkUnggulan" id="scrollToProdukUnggulan" class="btn btn-primary py-md-3 px-md-5 mt-2">Order Sekarang!</a>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img class="w-100" src="img/carouselcamp.jpg" alt="Image">
-                <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                    <div class="p-3" style="max-width: 900px;">
-                        <h4 class="text-white text-uppercase mb-md-3">Sewa Peralatan Outdoor Sekarang.</h4>
-                        <h1 class="display-1 text-white mb-md-4">Kita Menyediakan Peralatan Outdoor Yang Berkualitas.</h1>
-                        <a href="#produkUnggulan" id="scrollToProdukUnggulan" class="btn btn-primary py-md-3 px-md-5 mt-2">Order Sekarang!</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-            <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                <span class="carousel-control-prev-icon mb-n2"></span>
-            </div>
-        </a>
-        <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-            <div class="btn btn-dark" style="width: 45px; height: 45px;">
-                <span class="carousel-control-next-icon mb-n2"></span>
-            </div>
-        </a>
-    </div>
-</div>
-<!-- Carousel End -->
 
-   <!-- Produk Unggulan Start -->
-<div id="produkUnggulan" class="container-fluid py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="text-uppercase">Produk Unggulan</h2>
-        </div>
-        <div class="row">
-            <!-- Produk 1 -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="img/TendaCamping.png" class="card-img-top" alt="Tenda">
-                    <div class="card-body">
-                        <h5 class="card-title">Tenda Patagonia</h5>
-                        <p class="card-text">Harga Sewa: Rp. 50.000 /Hari</p>
-                        <a href="#" class="btn btn-primary">Detail Produk</a>
+
+    <!-- Rent A Car Start -->
+    <div class="container-fluid py-5">
+        <div class="container pt-5 pb-3">
+            <h1 class="display-4 text-uppercase text-center mb-5">TAS GUNUNG</h1>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-2">
+                    <div class="rent-item mb-4">
+                        <img class="img-fluid mb-4" src="img/consinabackpack.jpg" alt="">
+                        <h4 class="text-uppercase mb-4">Tas Consina</h4>
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="px-2">
+                                <i class="fa fa-car text-primary mr-1"></i>
+                                <span>Kapasitas 60L</span>
+                                <br><span>Bahan Tahan Air</span></br>
+                                <br><span>Rp. 65.000 / Hari</span></br>
+                            </div>
+                        </div>
+                        <a class="btn btn-primary px-3" href="detail.html">Lihat Lebih</a>
                     </div>
                 </div>
-            </div>
-            <!-- Produk 2 -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="img/backpack1.png" class="card-img-top" alt="Backpack">
-                    <div class="card-body">
-                        <h5 class="card-title">Tas Decathlon 30L</h5>
-                        <p class="card-text">Harga Sewa: Rp. 30.000 /Hari</p>
-                        <a href="#" class="btn btn-primary">Detail Produk</a>
+                <div class="col-lg-4 col-md-6 mb-2">
+                    <div class="rent-item mb-4">
+                        <img class="img-fluid mb-4" src="img/decathlonbackpack.jpg" alt="">
+                        <h4 class="text-uppercase mb-4">Tas Decathlon</h4>
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="px-2">
+                                <span>Kapasitas 30L</span>
+                                <br><span>Bahan Tahan Air</span></br>
+                                <br><span>Rp. 50.000 / Hari</span></br>
+                            </div>
+                        </div>  
+                        <a class="btn btn-primary px-3" href="detail.html">Lihat Lebih</a>
                     </div>
                 </div>
-            </div>
-            <!-- Produk 3 -->
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="card">
-                    <img src="img/portablestove.png" class="card-img-top" alt="Kompor">
-                    <div class="card-body">
-                        <h5 class="card-title">Kompor Portable</h5>
-                        <p class="card-text">Harga Sewa: Rp. 20.000 /Hari</p>
-                        <a href="#" class="btn btn-primary">Detail Produk</a>
+                <div class="col-lg-4 col-md-6 mb-2">
+                    <div class="rent-item mb-4">
+                        <img class="img-fluid mb-4" src="img/areibackpack.jpeg" alt="">
+                        <h4 class="text-uppercase mb-4">Tas Arei</h4>
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="px-2">
+                                <i class="fa fa-car text-primary mr-1"></i>
+                                <span>Kapasitas 30L</span>
+                                <br><span>Bahan Tahan Air</span></br>
+                                <br><span>Rp. 35.000 / Hari</span></br>
+                            </div>
+                        </div>
+                        <a class="btn btn-primary px-3" href="detail.html">Lihat Lebih</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Produk Unggulan End -->
+    
+    <!-- Rent A Car End -->
+
+
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
@@ -218,8 +172,10 @@
     </div>
     <!-- Footer End -->
 
+
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
