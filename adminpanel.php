@@ -1,10 +1,15 @@
 <?php
 session_start();
+include 'koneksi.php'; // Koneksi ke database
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
     header("Location: login.php");
     exit();
 }
+
+// Mendapatkan semua pengguna dari tabel login_system
+$sql = "SELECT id, email FROM login_system";
+$result = $conn->query($sql);
 
 echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
 ?>
@@ -23,7 +28,6 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
@@ -65,11 +69,11 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
-                        <a href="adminpanel.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manageproduct.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
-                        <a href="manageorder.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manageuser.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
-                        <a href="adminsettings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
+                        <a href="adminpanel.php" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manageproduct.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="manageorder.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manageuser.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
+                        <a href="adminsettings.php" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
             </div>

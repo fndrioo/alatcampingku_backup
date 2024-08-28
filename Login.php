@@ -14,15 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = $user['role'];
 
         if ($user['role'] == 'admin') {
             header("Location: adminpanel.php");
         } else {
             header("Location: indexx.php");
         }
+        exit();
+
     } else {
-        echo "<script>alert('Login failed! Please check your credentials.'); window.location.href='Login.html';</script>";
+        echo "<script>alert('Login failed! Please check your credentials.'); window.location.href='login.php';</script>";
     }
 }
 ?>
@@ -30,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <div class="row justify-content-center">
@@ -68,4 +71,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 </body>
+
 </html>
