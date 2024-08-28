@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        <a href="adminpanel.html" class="nav-item nav-link">Admin Panel</a>
+                        <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
                         <a href="keranjang.html" class="nav-item nav-link">Keranjang</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>

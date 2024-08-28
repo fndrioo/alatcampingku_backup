@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
+    header("Location: login.php");
+    exit();
+}
+
+echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
