@@ -3,39 +3,54 @@ require 'koneksi.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $email = $_POST['email'];
+    // Mengambil data dari form
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+    $email = trim($_POST['email']);
+    $role = 'user'; // Role default
 
-    // Cek apakah username sudah ada
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_users WHERE username = :username");
+    // Validasi input (opsional tetapi disarankan)
+    if (empty($username) || empty($password) || empty($email)) {
+        echo "<script>alert('All fields are required!'); window.location.href='Register.php';</script>";
+        exit;
+    }
+
+    // Cek apakah username atau email sudah ada
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_users WHERE username = :username OR email = :email");
     $stmt->bindParam(':username', $username);
+    $stmt->bindParam(':email', $email);
     $stmt->execute();
     $count = $stmt->fetchColumn();
 
     if ($count > 0) {
-        echo "<script>alert('Username already exists! Please choose another username.'); window.location.href='Register.html';</script>";
+        echo "<script>alert('Username atau Email sudah digunakan!'); window.location.href='Register.php';</script>";
         exit;
     }
 
-    // Jika username belum ada, lanjutkan dengan registrasi
-    $stmt = $conn->prepare("INSERT INTO tb_users (username, password, email) VALUES (:username, :password, :email)");
+    // Hash password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+    // Siapkan query SQL untuk memasukkan data
+    $stmt = $conn->prepare("INSERT INTO tb_users (username, email, password, role) VALUES (:username, :email, :password, :role)");
     $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':password', $password);
     $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':password', $hashed_password);
+    $stmt->bindParam(':role', $role);
 
     if ($stmt->execute()) {
         // Simpan informasi user di session
         $_SESSION['username'] = $username;
-        
+        $_SESSION['role'] = $role;
+
         // Redirect ke landing page
         header("Location: indexx.php");
         exit;
     } else {
-        echo "<script>alert('Registration failed! Please try again.'); window.location.href='Register.html';</script>";
+        echo "<script>alert('Registration failed! Please try again.'); window.location.href='Register.php';</script>";
     }
 }
 ?>
+
 
 
 

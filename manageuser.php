@@ -1,17 +1,10 @@
 <?php
-session_start();
-include 'koneksi.php'; // Koneksi ke database
+require 'koneksi.php'; // Menghubungkan ke database
 
-if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
-    header("Location: login.php");
-    exit();
-}
-
-// Mendapatkan semua pengguna dari tabel login_system
-$sql = "SELECT id, email FROM login_system";
-$result = $conn->query($sql);
-
-echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
+// Mengambil data pengguna dari database tanpa kolom status
+$stmt = $conn->prepare("SELECT id, username, email, role FROM tb_users");
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +12,7 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
 
 <head>
     <meta charset="utf-8">
-    <title>Admin Panel - AlatCampingKu</title>
+    <title>Manage Users - Admin Panel AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -28,6 +21,7 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
 
     <!-- Font Awesome -->
@@ -55,7 +49,7 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
             <div class="navbar-nav ml-auto py-0">
-                <a href="indexx.php" class="nav-item nav-link">Home</a>
+                <a href="indexx.html" class="nav-item nav-link">Home</a>
                 <a href="index.html" class="nav-item nav-link">Logout</a>
             </div>
         </div>
@@ -69,12 +63,11 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
-                        <a href="adminpanel.php" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manageproduct.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
-                        <a href="manageorder.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manageuser.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
-                        <a href="managecategory.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Category</a>
-                        <a href="adminsettings.php" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
+                        <a href="dashboard.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="manage-orders.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manage-users.php" class="list-group-item list-group-item-action bg-dark text-light active">Manage Users</a>
+                        <a href="settings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
             </div>
@@ -83,62 +76,34 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
             <!-- Main Content Start -->
             <div class="col-lg-10">
                 <div class="container p-4">
-                    <h2>Dashboard</h2>
-                    <p>Welcome to the admin panel of AlatCampingKu. Here you can manage all the aspects of the website.</p>
+                    <h2>Manage Users</h2>
+                    <p>Here you can manage all the users registered on AlatCampingKu.</p>
                     
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card text-white bg-primary mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Products</h5>
-                                    <p class="card-text">3</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-secondary mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Orders</h5>
-                                    <p class="card-text">2</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card text-white bg-success mb-3">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Users</h5>
-                                    <p class="card-text">1</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <h3>Recent Orders</h3>
+                    <!-- Users Table -->
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Order ID</th>
-                                <th>User</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <?php foreach ($users as $user): ?>
                             <tr>
-                                <td>1</td>
-                                <td>John Doe</td>
-                                <td>$150</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-primary">View</button></td>
+                                <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                <td><?php echo htmlspecialchars($user['username']); ?></td>
+                                <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                <td><?php echo htmlspecialchars($user['role']); ?></td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary">View</button>
+                                    <button class="btn btn-sm btn-warning">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jane Smith</td>
-                                <td>$200</td>
-                                <td>Completed</td>
-                                <td><button class="btn btn-sm btn-primary">View</button></td>
-                            </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

@@ -6,14 +6,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+    // Debugging: Check if the user is found
     $stmt = $conn->prepare("SELECT * FROM tb_users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
-
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user && password_verify($password, $user['password'])) {
+    if ($user) {
+        echo "User found: ";
+        var_dump($user); // Debugging: Menampilkan detail user yang ditemukan
+    } else {
+        echo "User not found";
+        exit; // Menghentikan eksekusi jika user tidak ditemukan
+    }
+
+    // Jika user ditemukan, lanjutkan dengan verifikasi password
+    if (password_verify($password, $user['password'])) {
         $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
 
         if ($user['role'] == 'admin') {
             header("Location: adminpanel.php");
@@ -27,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">

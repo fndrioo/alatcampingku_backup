@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Manage Users - Admin Panel AlatCampingKu</title>
+    <title>Manage Products - Admin Panel AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -54,10 +54,10 @@
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
-                        <a href="dashboard.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="adminpanel.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light active">Manage Products</a>
                         <a href="manage-orders.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manage-users.html" class="list-group-item list-group-item-action bg-dark text-light active">Manage Users</a>
+                        <a href="manage-users.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
                         <a href="settings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
@@ -67,44 +67,58 @@
             <!-- Main Content Start -->
             <div class="col-lg-10">
                 <div class="container p-4">
-                    <h2>Manage Users</h2>
-                    <p>Here you can manage all the users registered on AlatCampingKu.</p>
+                    <h2>Manage Products</h2>
+                    <p>Here you can manage all the products listed on AlatCampingKu.</p>
                     
-                    <!-- Users Table -->
+                    <!-- Add Product Button -->
+                    <div class="mb-4">
+                        <button class="btn btn-primary">Add New Product</button>
+                    </div>
+
+                    <!-- Products Table -->
                     <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>User ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
+                                <th>Product ID</th>
+                                <th>Kategori</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>John Doe</td>
-                                <td>john.doe@example.com</td>
-                                <td>Customer</td>
-                                <td>Active</td>
+                                <td>Tenda</td>
+                                <td>Tenda</td>
+                                <td>Rp. 50.000</td>
+                                <td>5</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">View</button>
                                     <button class="btn btn-sm btn-warning">Edit</button>
-                                    <button class="btn btn-sm btn-danger">Deactivate</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>2</td>
-                                <td>Jane Smith</td>
-                                <td>jane.smith@example.com</td>
-                                <td>Admin</td>
-                                <td>Active</td>
+                                <td>Backpack Adventure</td>
+                                <td>Backpack</td>
+                                <td>Rp. 30.000</td>
+                                <td>10</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary">View</button>
                                     <button class="btn btn-sm btn-warning">Edit</button>
-                                    <button class="btn btn-sm btn-danger">Deactivate</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Kompor Portable</td>
+                                <td>Kompor</td>
+                                <td>Rp. 20.000</td>
+                                <td>15</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning">Edit</button>
+                                    <button class="btn btn-sm btn-danger">Delete</button>
                                 </td>
                             </tr>
                         </tbody>

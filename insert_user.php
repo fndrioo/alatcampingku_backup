@@ -2,33 +2,38 @@
 // Koneksi ke database
 include 'koneksi.php'; // Pastikan jalur ini benar
 
-// Data user yang ingin dimasukkan
-$email = 'admin1@alatcampingku.com'; // Email asli
+// Data admin yang ingin dimasukkan
+$username = 'admin'; // Username admin
+$email = 'admin1@alatcampingku.com'; // Email admin
 $password = 'admin123'; // Password asli
+$role = 'admin'; // Role admin
 
 // Buat hash dari password menggunakan password_hash()
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-// Cek apakah email sudah ada
-$sql = "SELECT COUNT(*) FROM login_system WHERE email = :email";
+// Cek apakah username atau email sudah ada
+$sql = "SELECT COUNT(*) FROM tb_users WHERE username = :username OR email = :email";
 $stmt = $conn->prepare($sql);
+$stmt->bindParam(':username', $username);
 $stmt->bindParam(':email', $email);
 $stmt->execute();
 $count = $stmt->fetchColumn();
 
 if ($count > 0) {
-    echo "Error: Email sudah digunakan!";
+    echo "Error: Username atau Email sudah digunakan!";
 } else {
     // Siapkan query SQL untuk memasukkan data
-    $sql = "INSERT INTO login_system (email, password) VALUES (:email, :password)";
+    $sql = "INSERT INTO tb_users (username, email, password, role) VALUES (:username, :email, :password, :role)";
     $stmt = $conn->prepare($sql);
 
     // Bind parameter dan eksekusi statement
+    $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $hashed_password);
+    $stmt->bindParam(':role', $role);
 
     if ($stmt->execute()) {
-        echo "Data user berhasil disimpan!";
+        echo "Data admin berhasil disimpan!";
     } else {
         echo "Error: " . $stmt->errorInfo()[2];
     }
