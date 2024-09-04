@@ -70,7 +70,7 @@
                             <div class="dropdown-menu rounded-0 m-0">
                                 <a href="product.html" class="dropdown-item">Tenda</a>
                                 <a href="product1.html" class="dropdown-item">Tas Gunung</a>
-                                <a href="product2.html" class="dropdown-item">Kompor</a>
+                                <a href="product2.html" class="dropdown-item">Peralatan Masak</a>
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>

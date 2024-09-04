@@ -1,18 +1,33 @@
 <?php
 session_start();
 include 'koneksi.php'; // Koneksi ke database
+include 'functions.php'; // Include file functions.php
 
 if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
     header("Location: login.php");
     exit();
 }
 
-// Mendapatkan semua pengguna dari tabel login_system
+// Mendapatkan semua pengguna dari tabel login_system menggunakan PDO
 $sql = "SELECT id, email FROM login_system";
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Query untuk menghitung total pengguna
+$count_user_sql = "SELECT COUNT(*) AS total_users FROM login_system";
+$stmt_count = $conn->prepare($count_user_sql);
+$stmt_count->execute();
+$user_data = $stmt_count->fetch(PDO::FETCH_ASSOC);
+$total_users = $user_data['total_users'];
+
+// Mengambil total pengguna melalui fungsi
+$total_users = getTotalUsers($conn);
 
 echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +43,8 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
@@ -69,12 +85,18 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
-                        <a href="adminpanel.php" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manageproduct.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
-                        <a href="manageorder.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manageuser.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
-                        <a href="managecategory.php" class="list-group-item list-group-item-action bg-dark text-light">Manage Category</a>
-                        <a href="adminsettings.php" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
+                        <a href="adminpanel.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manageproduct.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="manageorder.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manageuser.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
+                        <a href="managecategory.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Category</a>
+                        <a href="adminsettings.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
             </div>
@@ -84,8 +106,9 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
             <div class="col-lg-10">
                 <div class="container p-4">
                     <h2>Dashboard</h2>
-                    <p>Welcome to the admin panel of AlatCampingKu. Here you can manage all the aspects of the website.</p>
-                    
+                    <p>Welcome to the admin panel of AlatCampingKu. Here you can manage all the aspects of the website.
+                    </p>
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="card text-white bg-primary mb-3">
@@ -107,44 +130,45 @@ echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
                             <div class="card text-white bg-success mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">Total Users</h5>
-                                    <p class="card-text">1</p>
+                                    <p class="card-text"><?php echo $total_users; ?></p>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <h3>Recent Orders</h3>
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>User</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>John Doe</td>
-                                <td>$150</td>
-                                <td>Pending</td>
-                                <td><button class="btn btn-sm btn-primary">View</button></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jane Smith</td>
-                                <td>$200</td>
-                                <td>Completed</td>
-                                <td><button class="btn btn-sm btn-primary">View</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
+
+                <h3>Recent Orders</h3>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>User</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>$150</td>
+                            <td>Pending</td>
+                            <td><button class="btn btn-sm btn-primary">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>$200</td>
+                            <td>Completed</td>
+                            <td><button class="btn btn-sm btn-primary">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <!-- Main Content End -->
         </div>
+        <!-- Main Content End -->
+    </div>
     </div>
 
     <!-- Footer Start -->

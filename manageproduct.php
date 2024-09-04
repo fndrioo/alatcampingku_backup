@@ -1,3 +1,50 @@
+<?php
+session_start();
+include 'koneksi.php'; // Koneksi ke database
+
+// Cek apakah form add, edit, atau delete telah dikirim
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_product'])) {
+        // Tambah produk baru
+        $name = $_POST['name'];
+        $category = $_POST['category'];
+        $price = $_POST['price'];
+        $stock = $_POST['stock'];
+
+        $sql = "INSERT INTO products (name, category, price, stock) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ssdi', $name, $category, $price, $stock);
+        $stmt->execute();
+    } elseif (isset($_POST['edit_product'])) {
+        // Edit produk
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $category = $_POST['category'];
+        $price = $_POST['price'];
+        $stock = $_POST['stock'];
+
+        $sql = "UPDATE products SET name = ?, category = ?, price = ?, stock = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('ssdii', $name, $category, $price, $stock, $id);
+        $stmt->execute();
+    } elseif (isset($_POST['delete_product'])) {
+        // Hapus produk
+        $id = $_POST['id'];
+
+        $sql = "DELETE FROM products WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+    }
+}
+
+// Ambil semua produk dari database
+$sql = "SELECT * FROM products";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,7 +60,8 @@
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
@@ -40,7 +88,7 @@
         </button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
             <div class="navbar-nav ml-auto py-0">
-                <a href="indexx.html" class="nav-item nav-link">Home</a>
+                <a href="indexx.php" class="nav-item nav-link">Home</a>
                 <a href="index.html" class="nav-item nav-link">Logout</a>
             </div>
         </div>
@@ -54,11 +102,18 @@
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
-                        <a href="adminpanel.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light active">Manage Products</a>
-                        <a href="manage-orders.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manage-users.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
-                        <a href="settings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
+                        <a href="adminpanel.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manageproduct.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="manageorder.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manageuser.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Users</a>
+                        <a href="managecategory.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Category</a>
+                        <a href="adminsettings.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
             </div>
@@ -69,7 +124,7 @@
                 <div class="container p-4">
                     <h2>Manage Products</h2>
                     <p>Here you can manage all the products listed on AlatCampingKu.</p>
-                    
+
                     <!-- Add Product Button -->
                     <div class="mb-4">
                         <button class="btn btn-primary">Add New Product</button>

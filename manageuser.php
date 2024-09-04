@@ -1,8 +1,47 @@
 <?php
 require 'koneksi.php'; // Menghubungkan ke database
 
-// Mengambil data pengguna dari database tanpa kolom status
-$stmt = $conn->prepare("SELECT id, username, email, role FROM tb_users");
+// Create User
+if (isset($_POST['create'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password
+    $role = $_POST['role'];
+    $status = $_POST['status'];
+    $stmt = $conn->prepare("INSERT INTO tb_users (username, email, password, role, status) VALUES (?, ?, ?, ?, ?)");
+    $stmt->execute([$username, $email, $password, $role, $status]);
+    header("Location: manageuser.php");
+    exit();
+}
+
+// Update User
+if (isset($_POST['update'])) {
+    $id = $_POST['id'];
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $role = $_POST['role'];
+    $status = $_POST['status'];
+
+    $stmt = $conn->prepare("UPDATE tb_users SET username = ?, email = ?, role = ?, status = ? WHERE id = ?");
+    $stmt->execute([$username, $email, $role, $status, $id]);
+
+    header("Location: manageuser.php");
+    exit();
+}
+
+// Delete User Permanently
+if (isset($_POST['delete'])) {
+    $id = $_POST['id'];
+
+    $stmt = $conn->prepare("DELETE FROM tb_users WHERE id = ?");
+    $stmt->execute([$id]);
+
+    header("Location: manageuser.php");
+    exit();
+}
+
+// Mengambil data pengguna dari database
+$stmt = $conn->prepare("SELECT id, username, email, role, status FROM tb_users");
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -12,7 +51,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <meta charset="utf-8">
-    <title>Manage Users - Admin Panel AlatCampingKu</title>
+    <title>Admin Panel - AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
@@ -21,8 +60,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
@@ -36,6 +75,9 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+    <!-- Include CSS & JS Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -63,11 +105,16 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                     <h4 class="text-light">Admin Menu</h4>
                     <div class="list-group list-group-flush w-100">
-                        <a href="dashboard.html" class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
-                        <a href="manage-products.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
-                        <a href="manage-orders.html" class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
-                        <a href="manage-users.php" class="list-group-item list-group-item-action bg-dark text-light active">Manage Users</a>
-                        <a href="settings.html" class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
+                        <a href="adminpanel.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Dashboard</a>
+                        <a href="manageproduct.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Products</a>
+                        <a href="manageorder.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Manage Orders</a>
+                        <a href="manageuser.php"
+                            class="list-group-item list-group-item-action bg-dark text-light active">Manage Users</a>
+                        <a href="settings.php"
+                            class="list-group-item list-group-item-action bg-dark text-light">Settings</a>
                     </div>
                 </div>
             </div>
@@ -78,31 +125,101 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="container p-4">
                     <h2>Manage Users</h2>
                     <p>Here you can manage all the users registered on AlatCampingKu.</p>
-                    
+
+                    <!-- Add New User Button -->
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">Add New
+                        User</button>
+
                     <!-- Users Table -->
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped mt-3">
                         <thead>
                             <tr>
                                 <th>User ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($users as $user): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($user['id']); ?></td>
-                                <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                <td><?php echo htmlspecialchars($user['role']); ?></td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary">View</button>
-                                    <button class="btn btn-sm btn-warning">Edit</button>
-                                    <button class="btn btn-sm btn-danger">Delete</button>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($user['id']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['username']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['role']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['status']); ?></td>
+                                    <td>
+                                        <!-- Edit User Button -->
+                                        <button class="btn btn-sm btn-warning" data-toggle="modal"
+                                            data-target="#editUserModal<?php echo $user['id']; ?>">Edit</button>
+
+                                        <!-- Delete User Form -->
+                                        <form method="post" style="display:inline-block;">
+                                            <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                                            <button type="submit" name="delete" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <!-- Edit User Modal -->
+                                <div class="modal fade" id="editUserModal<?php echo $user['id']; ?>" tabindex="-1"
+                                    role="dialog">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit User</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form method="post">
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
+                                                    <div class="form-group">
+                                                        <label>Username</label>
+                                                        <input type="text" class="form-control" name="username"
+                                                            value="<?php echo htmlspecialchars($user['username']); ?>"
+                                                            required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Email</label>
+                                                        <input type="email" class="form-control" name="email"
+                                                            value="<?php echo htmlspecialchars($user['email']); ?>"
+                                                            required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Role</label>
+                                                        <select class="form-control" name="role" required>
+                                                            <option value="admin" <?php if ($user['role'] == 'admin')
+                                                                echo 'selected'; ?>>Admin</option>
+                                                            <option value="user" <?php if ($user['role'] == 'user')
+                                                                echo 'selected'; ?>>User</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Status</label>
+                                                        <select class="form-control" name="status" required>
+                                                            <option value="active" <?php if ($user['status'] == 'active')
+                                                                echo 'selected'; ?>>Active</option>
+                                                            <option value="inactive" <?php if ($user['status'] == 'inactive')
+                                                                echo 'selected'; ?>>Inactive</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="update" class="btn btn-primary">Save
+                                                        changes</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Close</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -112,28 +229,57 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <!-- Footer Start -->
-    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
-        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
-        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" class="form-control" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select class="form-control" name="role" required>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="create" class="btn btn-primary">Add User</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <!-- Footer End -->
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="lib/tempusdominus/js/moment.min.js"></script>
-    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
 </body>
 
 </html>
