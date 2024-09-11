@@ -13,7 +13,8 @@
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
@@ -27,6 +28,18 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        /* Membuat tabel lebih lebar */
+        .table-custom-width {
+            width: 100%;
+            max-width: 1200px;
+        }
+        /* Membuat gambar lebih kecil di dalam tabel */
+        .product-image {
+            width: 150px;
+        }
+    </style>
 </head>
 
 <body>
@@ -42,18 +55,27 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="indexx.html" class="nav-item nav-link">Home</a>
+                        <a href="indexx.html" class="nav-item nav-link active">Home</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="product.html" class="dropdown-item">Tenda</a>
-                                <a href="product.html" class="dropdown-item">Backpack</a>
-                                <a href="product.html" class="dropdown-item">Kompor</a>
+                                <?php foreach ($categories as $category): ?>
+                                    <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                        class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        <a href="adminpanel.html" class="nav-item nav-link">Admin Panel</a>
-                        <a href="keranjang.html" class="nav-item nav-link active">Keranjang</a>
+                        <a href="contact.php" class="nav-item nav-link">Contact</a>
+                        <a href="orders.php" class="nav-item nav-link">Pesanan</a>
+
+                        <!-- Tampilkan hanya jika pengguna adalah admin -->
+                        <?php session_start();
+                        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
+                        <?php endif; ?>
+
+                        <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
+                        <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
             </nav>
@@ -61,43 +83,61 @@
     </div>
     <!-- Navbar End -->
 
-    <!-- Cart Start -->
-    <div class="container my-5 py-5">
-        <h2 class="text-center mb-4">Keranjang Belanja</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Produk</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Harga</th>
-                    <th scope="col">Jumlah</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Sample Item 1 -->
-                <tr>
-                    <td><img src="TendaCamping.png" alt="Product" style="width: 100px;"></td>
-                    <td>Tenda Patagonia</td>
-                    <td>Rp. 50.000</td>
-                    <td>
-                        <input type="number" class="form-control" value="1" min="1">
-                    </td>
-                    <td>Rp. 50.000</td>
-                    <td><button class="btn btn-danger">Hapus</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-end">
-            <h4>Total: Rp. 50.000</h4>
-        </div>
-        <div class="d-flex justify-content-between mt-4">
+    <!--Keranjang Start-->
+    <?php
+    // Periksa apakah session sudah dimulai
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Cek apakah keranjang kosong
+    if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+        echo "<p class='text-center'>Keranjang kosong!</p>";
+    } else {
+        $total = 0;
+        echo '<div class="container d-flex justify-content-center align-items-center py-5" style="min-height: 70vh;">';
+        echo '<div class="table-responsive">';
+        echo '<h2 class="text-center mb-4">Keranjang Belanja</h2>';
+        echo '<table class="table table-striped table-custom-width">
+        <thead>
+            <tr>
+                <th scope="col">Produk</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Harga</th>
+                <th scope="col">Jumlah</th>
+                <th scope="col">Total</th>
+                <th scope="col">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+        foreach ($_SESSION['cart'] as $item) {
+            $item_total = $item['harga'] * $item['quantity'];
+            $total += $item_total;
+            echo "<tr>
+                <td><img src='{$item['image_url']}' alt='Product' class='product-image'></td>
+                <td>{$item['nama']}</td>
+                <td>Rp. " . number_format($item['harga'], 0, ',', '.') . "</td>
+                <td><input type='number' class='form-control' value='{$item['quantity']}' min='1'></td>
+                <td>Rp. " . number_format($item_total, 0, ',', '.') . "</td>
+                <td><a href='hapus_keranjang.php?id={$item['id']}' class='btn btn-danger'>Hapus</a></td>
+            </tr>";
+        }
+
+        echo "</tbody>
+    </table>
+    <div class='d-flex justify-content-end'>
+        <h4>Total: Rp. " . number_format($total, 0, ',', '.') . "</h4>
+    </div>";
+        echo '<div class="d-flex justify-content-between mt-4">
             <a href="index.html" class="btn btn-secondary">Lanjut Belanja</a>
             <a href="transaction.html" class="btn btn-primary">Checkout</a>
-        </div>
-    </div>
-    <!-- Cart End -->
+          </div>';
+        echo '</div>';
+        echo '</div>';
+    }
+    ?>
+    <!--Keranjang End-->
 
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
@@ -118,20 +158,27 @@
             <div class="col-lg-3 col-md-6 mb-5">
                 <h4 class="text-uppercase text-light mb-4">Usefull Links</h4>
                 <div class="d-flex flex-column justify-content-start">
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private Policy</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term & Conditions</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member Registration</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate Programme</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return & Refund</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private
+                        Policy</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term &
+                        Conditions</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member
+                        Registration</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate
+                        Programme</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return &
+                        Refund</a>
                     <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FQAs</a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">
                 <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
-                <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sed kasd et</p>
+                <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sed
+                    kasd et</p>
                 <div class="w-100 mb-3">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;" placeholder="Your Email">
+                        <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;"
+                            placeholder="Your Email">
                         <div class="input-group-append">
                             <button class="btn btn-primary text-uppercase px-3">Sign Up</button>
                         </div>

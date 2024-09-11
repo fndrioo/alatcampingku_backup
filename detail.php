@@ -1,3 +1,56 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Koneksi ke database dan ambil detail produk dari database
+$host = 'localhost';
+$dbname = 'db_alatacampingku';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error connecting to database: " . $e->getMessage());
+}
+
+$product_id = $_GET['id'];
+$query = $pdo->prepare("SELECT * FROM products WHERE id = :id");
+$query->execute(['id' => $product_id]);
+$product = $query->fetch(PDO::FETCH_ASSOC);
+
+if (!$product) {
+    die("Product not found!");
+}
+
+// Logika untuk menambah produk ke keranjang
+if (isset($_POST['add_to_cart'])) {
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+
+    $product_in_cart = false;
+
+    foreach ($_SESSION['cart'] as &$item) {
+        if ($item['id'] == $product['id']) {
+            $item['quantity'] += 1;
+            $product_in_cart = true;
+            break;
+        }
+    }
+
+    if (!$product_in_cart) {
+        $product['quantity'] = 1;
+        $_SESSION['cart'][] = $product;
+    }
+
+    echo "<script>alert('Produk berhasil ditambahkan ke keranjang!');</script>";
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,23 +59,18 @@
     <title>AlatCampingKu</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Sewa dan Jual Alat Camping" name="description">
-
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
-
     <!-- Google Web Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap"
+        rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
-
     <!-- Libraries Stylesheet -->
     <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
     <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
-
     <!-- Customized Bootstrap Stylesheet -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -44,14 +92,24 @@
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="product.html" class="dropdown-item">Tenda</a>
-                                <a href="product.html" class="dropdown-item">Backpack</a>
-                                <a href="product.html" class="dropdown-item">Kompor</a>
+                                <?php foreach ($categories as $category): ?>
+                                    <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                        class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                        <a href="adminpanel.html" class="nav-item nav-link">Admin Panel</a>
-                        <a href="keranjang.html" class="nav-item nav-link">Keranjang</a>
+                        <a href="contact.php" class="nav-item nav-link">Contact</a>
+                        <a href="orders.php" class="nav-item nav-link">Pesanan</a>
+
+                        <!-- Tampilkan hanya jika pengguna adalah admin -->
+                        <?php if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
+                        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
+                        <?php endif; ?>
+
+                        <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
@@ -65,33 +123,36 @@
         <div class="container pt-5">
             <div class="row">
                 <div class="col-lg-8 mb-5">
-                    <h1 class="display-4 text-uppercase mb-5">Tenda Patagonia</h1>
+                    <h1 class="display-4 text-uppercase mb-5"><?php echo $product['nama']; ?></h1>
                     <div class="row mx-n2 mb-3">
                         <div class="col-md-6 col-12 px-2 pb-2">
-                            <img class="img-fluid w-100" src="img/TendaCamping.png" alt="Tenda Patagonia">
+                            <img class="img-fluid w-100" src="<?php echo $product['image_url']; ?>"
+                                alt="<?php echo $product['nama']; ?>">
                         </div>
                     </div>
-                    <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt magna dolores aliquyam dolores dolore. Amet erat amet et magna.</p>
+                    <p><?php echo $product['description']; ?></p>
                     <div class="row pt-2">
                         <div class="col-md-3 col-6 mb-2">
-                            <span>Color: Blue</span>
+                            <span>Kategori: <?php echo $product['kategori']; ?></span>
                         </div>
                         <div class="col-md-3 col-6 mb-2">
-                            <span>Kapasitas: 5 Orang</span>
+                            <span>Harga Sewa: Rp. <?php echo number_format($product['harga'], 0, ',', '.'); ?>
+                                /Hari</span>
                         </div>
                         <div class="col-md-3 col-6 mb-2">
-                            <span>Tahan Air dan Angin</span>
-                        </div>
-                        <div class="col-md-3 col-6 mb-2">
-                            <span>Handle Serbaguna</span>
+                            <span>Stok Tersedia: <?php echo $product['stock']; ?></span>
                         </div>
                     </div>
                     <div class="row pt-2">
                         <div class="col-md-3 col-6 mb-2">
-                            <a class="btn btn-primary px-3" href="transaction.html">Sewa - Rp. 50.000/Hari</a>
+                            <a class="btn btn-primary px-3" href="transaction.html">Sewa - Rp.
+                                <?php echo number_format($product['harga'], 0, ',', '.'); ?> /Hari</a>
                         </div>
                         <div class="col-md-3 col-6 mb-2">
-                            <a class="btn btn-success px-3" href="Keranjang.html">Tambah ke Keranjang</a>
+                            <form method="POST" action="">
+                                <button type="submit" name="add_to_cart" class="btn btn-success px-3">Tambah ke
+                                    Keranjang</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -117,34 +178,43 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Useful Links</h4>
+                <h4 class="text-uppercase text-light mb-4">Usefull Links</h4>
                 <div class="d-flex flex-column justify-content-start">
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private Policy</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Terms & Conditions</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member Registration</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate Programme</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return & Refund</a>
-                    <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FAQs</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private
+                        Policy</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term &
+                        Conditions</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member
+                        Registration</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate
+                        Programme</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return &
+                        Refund</a>
+                    <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FQAs</a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">
                 <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
-                <p>Dolor amet clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod.</p>
-                <form action="">
+                <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sed
+                    kasd et</p>
+                <div class="w-100 mb-3">
                     <div class="input-group">
-                        <input type="text" class="form-control border-light" placeholder="Your Email Address">
+                        <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;"
+                            placeholder="Your Email">
                         <div class="input-group-append">
-                            <button class="btn btn-primary">Sign Up</button>
+                            <button class="btn btn-primary text-uppercase px-3">Sign Up</button>
                         </div>
                     </div>
-                </form>
+                </div>
+                <i>Lorem sit sed elitr sed kasd et</i>
             </div>
         </div>
     </div>
-    <!-- Footer End -->
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-chevron-up"></i></a>
+    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
+        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
+        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
+    </div>
+    <!-- (Sama dengan kode sebelumnya) -->
 
     <!-- JavaScript Libraries -->
     <script src="lib/jquery/jquery.min.js"></script>

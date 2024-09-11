@@ -12,7 +12,8 @@
     <link href="img/favicon.ico" rel="icon">
 
     <!-- Google Web Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
@@ -65,7 +66,8 @@
                 <h4 class="mb-3">Detail Pesanan</h4>
                 <div class="card p-4 mb-4">
                     <h5 class="mb-3">Tenda Patagonia</h5>
-                    <img src="img/TendaCamping.png" alt="Tenda Patagonia" class="img-fluid mb-3" style="max-width: 200px;">
+                    <img src="img/TendaCamping.png" alt="Tenda Patagonia" class="img-fluid mb-3"
+                        style="max-width: 200px;">
                     <p>Harga Sewa: <strong>Rp. 50.000 /Hari</strong></p>
                     <p>Durasi Sewa: <strong>3 Hari</strong></p>
                     <p>Jumlah Item: <strong>1</strong></p>
@@ -87,7 +89,8 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="accountNumber">No. Rekening</label>
-                            <input type="text" class="form-control" id="accountNumber" placeholder="Nomor Rekening" required>
+                            <input type="text" class="form-control" id="accountNumber" placeholder="Nomor Rekening"
+                                required>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="phone">Nomor HP</label>
@@ -103,7 +106,10 @@
                             <option>Bank BRI</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit Pembayaran</button>
+                    <form action="buktipembayaran.php" method="post">
+                        <!-- Tambahkan elemen form lainnya di sini, seperti input untuk data pembayaran -->
+                        <button type="submit" class="btn btn-primary">Submit Pembayaran</button>
+                    </form>
                 </form>
             </div>
 
@@ -130,7 +136,8 @@
     <!-- Footer Start -->
     <footer class="bg-secondary py-4">
         <div class="container text-center">
-            <p class="text-white">&copy; AlatCampingKu. All Rights Reserved. Designed by <a href="https://htmlcodex.com" class="text-primary">HTML Codex</a></p>
+            <p class="text-white">&copy; AlatCampingKu. All Rights Reserved. Designed by <a href="https://htmlcodex.com"
+                    class="text-primary">HTML Codex</a></p>
         </div>
     </footer>
     <!-- Footer End -->

@@ -6,6 +6,12 @@ $sql = "SELECT * FROM products";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Ambil semua kategori dari database
+$sql_categories = "SELECT * FROM tb_category";
+$stmt_categories = $conn->prepare($sql_categories);
+$stmt_categories->execute();
+$categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -84,12 +90,14 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
-                                <a href="product.html" class="dropdown-item">Tenda</a>
-                                <a href="product1.html" class="dropdown-item">Tas Gunung</a>
-                                <a href="product2.html" class="dropdown-item">Peralatan Masak</a>
+                                <?php foreach ($categories as $category): ?>
+                                    <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                        class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        <a href="contact.php" class="nav-item nav-link">Contact</a>
+                        <a href="orders.php" class="nav-item nav-link">Pesanan</a>
 
                         <!-- Tampilkan hanya jika pengguna adalah admin -->
                         <?php session_start();
@@ -97,7 +105,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
                         <?php endif; ?>
 
-                        <a href="keranjang.html" class="nav-item nav-link">Keranjang</a>
+                        <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
@@ -182,7 +190,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach; ?>
         </div>
     </div>
-
     <!-- Produk Unggulan End -->
 
     <!-- Footer Start -->
