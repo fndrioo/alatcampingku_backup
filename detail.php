@@ -88,7 +88,7 @@ if (isset($_POST['add_to_cart'])) {
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="indexx.html" class="nav-item nav-link active">Home</a>
+                        <a href="indexx.html" class="nav-item nav-link">Home</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
@@ -149,15 +149,31 @@ if (isset($_POST['add_to_cart'])) {
                                 <?php echo number_format($product['harga'], 0, ',', '.'); ?> /Hari</a>
                         </div>
                         <div class="col-md-3 col-6 mb-2">
-                            <form method="POST" action="">
-                                <button type="submit" name="add_to_cart" class="btn btn-success px-3">Tambah ke
-                                    Keranjang</button>
+                            <form action="add_to_cart.php" method="POST" class="d-flex align-items-center">
+                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+
+                                <div class="input-group" style="max-width: 150px;">
+                                    <div class="input-group-prepend">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="decreaseQuantity">-</button>
+                                    </div>
+                                    <input type="number" name="quantity" class="form-control text-center" value="1"
+                                        min="1" max="<?= $product['stock'] ?>" aria-label="Quantity">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button"
+                                            id="increaseQuantity">+</button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" name="add_to_cart" class="btn btn-success ml-3"
+                                    style="width: auto;">Tambahkan ke Keranjang</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- Detail End -->
 
@@ -222,8 +238,36 @@ if (isset($_POST['add_to_cart'])) {
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
+    <!--Style CSS-->
+    <style>
+        .input-group .btn {
+            width: 60px;
+            /* Sesuaikan dengan kebutuhan */
+            padding: 5px;
+        }
+
+        .input-group .form-control {
+            width: 60px;
+            /* Sesuaikan lebar input agar pas */
+            text-align: center;
+        }
+    </style>
+
     <!-- Customized JavaScript -->
     <script src="js/main.js"></script>
+    <script>
+        document.getElementById('decreaseQuantity').addEventListener('click', function () {
+            var quantityInput = document.querySelector('input[name="quantity"]');
+            if (quantityInput.value > 1) {
+                quantityInput.value--;
+            }
+        });
+
+        document.getElementById('increaseQuantity').addEventListener('click', function () {
+            var quantityInput = document.querySelector('input[name="quantity"]');
+            quantityInput.value++;
+        });
+    </script>
 </body>
 
 </html>

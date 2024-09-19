@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session before any output is sent
 include 'koneksi.php'; // Koneksi ke database
 
 // Ambil semua produk dari database
@@ -91,8 +92,19 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 <?php foreach ($categories as $category): ?>
-                                    <a href="product.php?category_id=<?= $category['id_category'] ?>"
-                                        class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                    <?php if ($category['name'] == 'Tenda'): ?>
+                                        <a href="tenda.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Tenda</a>
+                                    <?php elseif ($category['name'] == 'Backpack'): ?>
+                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Backpack</a>
+                                    <?php elseif ($category['name'] == 'Peralatan Masak'): ?>
+                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Peralatan Masak</a>
+                                    <?php else: ?>
+                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
                         </div>
@@ -100,18 +112,20 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                         <a href="orders.php" class="nav-item nav-link">Pesanan</a>
 
                         <!-- Tampilkan hanya jika pengguna adalah admin -->
-                        <?php session_start();
+                        <?php
                         if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                             <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
                         <?php endif; ?>
 
                         <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
+                        <a href="profile.php" class="nav-item nav-link">Profil</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
             </nav>
         </div>
     </div>
+
     <!-- Navbar End -->
 
     <!-- Carousel Start -->
@@ -164,31 +178,22 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
             <?php foreach ($products as $product): ?>
                 <div class="col-md-4 mb-3">
                     <div class="card">
-                        <img class="card-img-top" src="<?= $product['image_url'] ?>" alt="<?= $product['nama'] ?>">
+                        <img class="card-img-top" src="<?= htmlspecialchars($product['image_url']) ?>"
+                            alt="<?= htmlspecialchars($product['nama']) ?>">
                         <div class="card-body">
-                            <h5 class="card-title"><?= $product['nama'] ?></h5>
+                            <h5 class="card-title"><?= htmlspecialchars($product['nama']) ?></h5>
                             <p class="card-text">Rp. <?= number_format($product['harga'], 0, ',', '.') ?></p>
                             <p class="card-text">
-                                Stock: <?= $product['stock'] ?>
-                                <?php if ($product['kategori'] == 'Tenda'): ?>
-                                    <a href="detail.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
-                                        Produk</a>
-                                <?php elseif ($product['kategori'] == 'Tas Gunung'): ?>
-                                    <a href="detail2.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
-                                        Produk</a>
-                                <?php elseif ($product['kategori'] == 'Peralatan Masak'): ?>
-                                    <a href="detail3.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
-                                        Produk</a>
-                                <?php else: ?>
-                                    <a href="detail.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
-                                        Produk</a>
-                                <?php endif; ?>
+                                Stock: <?= htmlspecialchars($product['stock']) ?>
+                                <a href="detail.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
+                                    Produk</a>
                             </p>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
+
     </div>
     <!-- Produk Unggulan End -->
 

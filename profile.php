@@ -1,3 +1,54 @@
+<?php
+session_start();
+include 'koneksi.php'; // Include your database connection script
+
+$user_id = $_SESSION['id'];
+
+try {
+    $query = "SELECT * FROM tb_users WHERE id = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$user) {
+        throw new Exception("User not found or query failed.");
+    }
+
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    
+    // Hash the new password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+    try {
+        $update_query = "UPDATE tb_users SET username = :username, email = :email, password = :password WHERE id = :id";
+        $update_stmt = $conn->prepare($update_query);
+        $update_stmt->bindParam(':username', $username);
+        $update_stmt->bindParam(':email', $email);
+        $update_stmt->bindParam(':password', $hashed_password);
+        $update_stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+        
+        if ($update_stmt->execute()) {
+            $success_msg = "Profile updated successfully!";
+        } else {
+            $error_msg = "Error updating profile. Please try again.";
+        }
+    } catch (Exception $e) {
+        $error_msg = "Error: " . $e->getMessage();
+    }
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,29 +123,26 @@
                             <h3 class="m-0">Profil Saya</h3>
                         </div>
                         <div class="card-body">
+                            <?php if (isset($success_msg)): ?>
+                                <div class="alert alert-success"><?php echo $success_msg; ?></div>
+                            <?php elseif (isset($error_msg)): ?>
+                                <div class="alert alert-danger"><?php echo $error_msg; ?></div>
+                            <?php endif; ?>
                             <div class="text-center mb-4">
                                 <img src="img/profileimg.png" class="rounded-circle" alt="Profile Image" width="200" height="200">
                             </div>
-                            <form>
+                            <form method="post" action="">
                                 <div class="form-group">
-                                    <label for="name">Nama Lengkap</label>
-                                    <input type="text" class="form-control" id="name" value="John Doe">
+                                    <label for="username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" value="johndoe@example.com">
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone">Nomor Telepon</label>
-                                    <input type="tel" class="form-control" id="phone" value="+1234567890">
-                                </div>
-                                <div class="form-group">
-                                    <label for="address">Alamat</label>
-                                    <textarea class="form-control" id="address" rows="3">123 Street, New York, USA</textarea>
+                                    <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="password">Password</label>
-                                    <input type="password" class="form-control" id="password" value="password123">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password">
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-block">Update Profil</button>
                             </form>

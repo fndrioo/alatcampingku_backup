@@ -6,18 +6,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Debugging: Check if the user is found
+    // Check if the user is found
     $stmt = $conn->prepare("SELECT * FROM tb_users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
-        // Jika user ditemukan, lanjutkan dengan verifikasi password
+        // Verifikasi password
         if (password_verify($password, $user['password'])) {
+            // Menyimpan user_id ke dalam session setelah login berhasil
+            $_SESSION['id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
 
+            // Redirection based on role
             if ($user['role'] == 'admin') {
                 header("Location: adminpanel.php");
             } else {
