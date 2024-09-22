@@ -10,19 +10,19 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
 
 // Mendapatkan semua pengguna dari tabel login_system menggunakan PDO
 $sql = "SELECT id, email FROM login_system";
-$stmt = $conn->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->execute();
 $result_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Query untuk menghitung total pengguna
 $count_user_sql = "SELECT COUNT(*) AS total_users FROM login_system";
-$stmt_count = $conn->prepare($count_user_sql);
+$stmt_count = $pdo->prepare($count_user_sql);
 $stmt_count->execute();
 $user_data = $stmt_count->fetch(PDO::FETCH_ASSOC);
 $total_users = $user_data['total_users'];
 
 // Mengambil total pengguna melalui fungsi
-$total_users = getTotalUsers($conn);
+$total_users = getTotalUsers($pdo);
 
 echo "Welcome to the admin panel, " . $_SESSION['username'] . "!";
 ?>

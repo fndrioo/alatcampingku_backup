@@ -18,8 +18,12 @@ $sql = "SELECT tb_keranjang.quantity, tb_keranjang.product_id, tb_keranjang.crea
         WHERE tb_keranjang.user_id = :user_id";
 $stmt = $pdo->prepare($sql);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-$stmt->execute();
-$cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($stmt->execute()) {
+    $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    echo "Error: " . $stmt->errorInfo()[2];
+}
 
 // Hitung total belanja
 $total_belanja = 0;
@@ -83,7 +87,7 @@ foreach ($cart_items as $item) {
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="position-relative px-lg-5" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
-                <a href="indexx.php" class="navbar-brand">
+                <a href="indexx.html" class="navbar-brand">
                     <h1 class="text-uppercase text-primary mb-1">AlatCampingKu</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -91,9 +95,35 @@ foreach ($cart_items as $item) {
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="indexx.php" class="nav-item nav-link">Home</a>
+                        <a href="indexx.html" class="nav-item nav-link">Home</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
+                            <div class="dropdown-menu rounded-0 m-0">
+                                <?php foreach ($categories as $category): ?>
+                                    <?php if ($category['name'] == 'Tenda'): ?>
+                                        <a href="tenda.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Tenda</a>
+                                    <?php elseif ($category['name'] == 'Backpack'): ?>
+                                        <a href="Backpack.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Backpack</a>
+                                    <?php elseif ($category['name'] == 'Peralatan Masak'): ?>
+                                        <a href="PeralatanMasak.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Peralatan Masak</a>
+                                    <?php else: ?>
+                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <a href="orders.php" class="nav-item nav-link">Pesanan</a>
+                        <?php
+                        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
+                        <?php endif; ?>
                         <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
-                        <a href="logout.php" class="nav-item nav-link">Logout</a>
+                        <a href="profile.php" class="nav-item nav-link">Profil</a>
+                        <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
             </nav>
@@ -103,7 +133,7 @@ foreach ($cart_items as $item) {
 
     <!-- Transaction Start -->
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Transaksi Anda</h2>
+    <h2 class="text-center mb-4">Transaksi Anda</h2>
         <div class="row">
             <div class="col-lg-8">
                 <h4 class="mb-3">Detail Pesanan</h4>
@@ -111,16 +141,11 @@ foreach ($cart_items as $item) {
                     <?php if (count($cart_items) > 0): ?>
                         <?php foreach ($cart_items as $item): ?>
                             <div class="card p-4 mb-4">
-                                <h5 class="mb-3"><?php echo htmlspecialchars($item['nama']); ?></h5>
-                                <img src="<?php echo htmlspecialchars($item['image_url']); ?>"
-                                    alt="<?php echo htmlspecialchars($item['nama']); ?>" class="img-fluid mb-3"
-                                    style="max-width: 200px;">
-                                <p>Harga Sewa: <strong>Rp. <?php echo number_format($item['harga'], 0, ',', '.'); ?>
-                                        /Hari</strong></p>
-                                <p>Jumlah Item: <strong><?php echo $item['quantity']; ?></strong></p>
-                                <p>Subtotal: <strong>Rp.
-                                        <?php echo number_format($item['harga'] * $item['quantity'], 0, ',', '.'); ?></strong>
-                                </p>
+                                <h5 class="mb-3"><?= htmlspecialchars($item['nama']) ?></h5>
+                                <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['nama']) ?>" class="img-fluid mb-3" style="max-width: 200px;">
+                                <p>Harga Sewa: <strong>Rp. <?= number_format($item['harga'], 0, ',', '.') ?>/Hari</strong></p>
+                                <p>Jumlah Item: <strong><?= $item['quantity'] ?></strong></p>
+                                <p>Subtotal: <strong>Rp. <?= number_format($item['harga'] * $item['quantity'], 0, ',', '.') ?></strong></p>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -128,41 +153,8 @@ foreach ($cart_items as $item) {
                     <?php endif; ?>
                 </div>
 
-                <h4 class="mb-3">Informasi Pembayaran</h4>
                 <form action="buktipembayaran.php" method="post">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" name="firstName"
-                                placeholder="First Name" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" name="lastName"
-                                placeholder="Last Name" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="accountNumber">No. Rekening</label>
-                            <input type="text" class="form-control" id="accountNumber" name="accountNumber"
-                                placeholder="Nomor Rekening" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="phone">Nomor HP</label>
-                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Nomor HP"
-                                required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="bank">Nama Bank</label>
-                        <select id="bank" name="bank" class="form-control">
-                            <option selected>Pilih Bank</option>
-                            <option>Bank BCA</option>
-                            <option>Bank Mandiri</option>
-                            <option>Bank BRI</option>
-                        </select>
-                    </div>
+                    <!-- Form input pembayaran -->
                     <button type="submit" class="btn btn-primary">Checkout</button>
                 </form>
             </div>
@@ -170,8 +162,7 @@ foreach ($cart_items as $item) {
             <div class="col-lg-4">
                 <h4 class="mb-3">Ringkasan Pesanan</h4>
                 <div class="card p-4 mb-4">
-                    <p>Total Pembayaran: <strong>Rp. <?php echo number_format($total_belanja, 0, ',', '.'); ?></strong>
-                    </p>
+                    <p>Total Pembayaran: <strong>Rp. <?= number_format($total_belanja, 0, ',', '.') ?></strong></p>
                 </div>
                 <h5 class="text-center">Terima kasih telah berbelanja di AlatCampingKu!</h5>
             </div>
@@ -180,12 +171,27 @@ foreach ($cart_items as $item) {
     <!-- Transaction End -->
 
     <!-- Footer Start -->
-    <footer class="bg-secondary py-4">
-        <div class="container text-center">
-            <p class="text-white">&copy; AlatCampingKu. All Rights Reserved. Designed by <a href="https://htmlcodex.com"
-                    class="text-primary">HTML Codex</a></p>
+    <div class="container-fluid bg-secondary text-white mt-5 py-5 px-sm-3 px-md-5">
+        <div class="row pt-5">
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-primary mb-4">Hubungi Kami</h4>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, City, Indonesia</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
+                <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-primary mb-4">Follow Us</h4>
+                <p>Follow us on our social media accounts</p>
+                <div class="d-flex">
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
     <!-- Footer End -->
 
     <!-- Back to Top -->

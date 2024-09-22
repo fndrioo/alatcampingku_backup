@@ -50,26 +50,44 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
         /* Mengatur tinggi carousel */
         #header-carousel .carousel-item img {
             height: 650px;
-            /* Sesuaikan tinggi sesuai kebutuhan */
             object-fit: cover;
         }
 
         /* Mengatur ukuran font di dalam carousel */
         #header-carousel .carousel-caption h4 {
             font-size: 1.75rem;
-            /* Sesuaikan ukuran font untuk teks kecil */
         }
 
         #header-carousel .carousel-caption h1 {
             font-size: 3rem;
-            /* Sesuaikan ukuran font untuk teks besar */
         }
 
         #header-carousel .carousel-caption .btn {
             font-size: 1.25rem;
-            /* Sesuaikan ukuran font untuk tombol */
             padding: 12px 25px;
-            /* Sesuaikan padding tombol */
+        }
+
+        /* Animasi untuk navbar */
+        .nav-bar {
+            transition: all 0.5s ease;
+        }
+
+        .nav-bar.scrolled {
+            background-color: rgba(0, 0, 0, 0.85);
+        }
+
+        /* Animasi muncul dari bawah */
+        .animate__fadeInUp {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 1s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -109,13 +127,10 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                         <a href="orders.php" class="nav-item nav-link">Pesanan</a>
-
-                        <!-- Tampilkan hanya jika pengguna adalah admin -->
                         <?php
                         if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                             <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
                         <?php endif; ?>
-
                         <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
                         <a href="profile.php" class="nav-item nav-link">Profil</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
@@ -124,7 +139,6 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
             </nav>
         </div>
     </div>
-
     <!-- Navbar End -->
 
     <!-- Carousel Start -->
@@ -134,7 +148,7 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                 <div class="carousel-item active">
                     <img class="w-100" src="img/CarouselCamping.jpg" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
+                        <div class="p-3 animate__fadeInUp" style="max-width: 900px;">
                             <h4 class="text-white text-uppercase mb-md-3">Sewa Peralatan Outdoor Sekarang.</h4>
                             <h1 class="display-1 text-white mb-md-4">Kita Menyediakan Peralatan Outdoor Yang
                                 Berkualitas.</h1>
@@ -146,7 +160,7 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                 <div class="carousel-item">
                     <img class="w-100" src="img/carouselcamp.jpg" alt="Image">
                     <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-                        <div class="p-3" style="max-width: 900px;">
+                        <div class="p-3 animate__fadeInUp" style="max-width: 900px;">
                             <h4 class="text-white text-uppercase mb-md-3">Sewa Peralatan Outdoor Sekarang.</h4>
                             <h1 class="display-1 text-white mb-md-4">Kita Menyediakan Peralatan Outdoor Yang
                                 Berkualitas.</h1>
@@ -175,23 +189,17 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
         <h2>Our Products</h2>
         <div class="row">
             <?php
-            // Ambil hanya 3 produk pertama dari array $products
             $featured_products = array_slice($products, 0, 3);
-
-            // Tampilkan 3 produk yang diambil
             foreach ($featured_products as $product): ?>
                 <div class="col-md-4 mb-3">
-                    <div class="card">
+                    <div class="card animate__fadeInUp">
                         <img class="card-img-top" src="<?= htmlspecialchars($product['image_url']) ?>"
                             alt="<?= htmlspecialchars($product['nama']) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($product['nama']) ?></h5>
                             <p class="card-text">Rp. <?= number_format($product['harga'], 0, ',', '.') ?></p>
-                            <p class="card-text">
-                                Stock: <?= htmlspecialchars($product['stock']) ?>
-                                <a href="detail.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
-                                    Produk</a>
-                            </p>
+                            <a href="detail.php?id=<?= htmlspecialchars($product['id']) ?>"
+                                class="btn btn-primary">Lihat Detail</a>
                         </div>
                     </div>
                 </div>
@@ -200,73 +208,37 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <!-- Produk Unggulan End -->
 
-    <!-- Produk Unggulan End -->
-
     <!-- Footer Start -->
-    <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
+    <div class="container-fluid bg-secondary text-white mt-5 py-5 px-sm-3 px-md-5">
         <div class="row pt-5">
             <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Get In Touch</h4>
-                <p class="mb-2"><i class="fa fa-map-marker-alt text-white mr-3"></i>123 Street, New York, USA</p>
-                <p class="mb-2"><i class="fa fa-phone-alt text-white mr-3"></i>+012 345 67890</p>
-                <p><i class="fa fa-envelope text-white mr-3"></i>info@example.com</p>
-                <h6 class="text-uppercase text-white py-2">Follow Us</h6>
-                <div class="d-flex justify-content-start">
-                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-lg btn-dark btn-lg-square" href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+                <h4 class="text-uppercase text-primary mb-4">Hubungi Kami</h4>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, City, Indonesia</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
+                <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Usefull Links</h4>
-                <div class="d-flex flex-column justify-content-start">
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private
-                        Policy</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term &
-                        Conditions</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member
-                        Registration</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate
-                        Programme</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return &
-                        Refund</a>
-                    <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FQAs</a>
+                <h4 class="text-uppercase text-primary mb-4">Follow Us</h4>
+                <p>Follow us on our social media accounts</p>
+                <div class="d-flex">
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
-                <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sed
-                    kasd et</p>
-                <div class="w-100 mb-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;"
-                            placeholder="Your Email">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary text-uppercase px-3">Sign Up</button>
-                        </div>
-                    </div>
-                </div>
-                <i>Lorem sit sed elitr sed kasd et</i>
             </div>
         </div>
-    </div>
-    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
-        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
-
-        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
     </div>
     <!-- Footer End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="lib/tempusdominus/js/moment.min.js"></script>
     <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
@@ -274,6 +246,17 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+    <!-- Script untuk animasi pada navbar -->
+    <script>
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 50) {
+                $('.nav-bar').addClass('scrolled');
+            } else {
+                $('.nav-bar').removeClass('scrolled');
+            }
+        });
+    </script>
 </body>
 
 </html>

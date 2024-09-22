@@ -13,7 +13,7 @@ $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
 // Cek apakah username atau email sudah ada
 $sql = "SELECT COUNT(*) FROM tb_users WHERE username = :username OR email = :email";
-$stmt = $conn->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->bindParam(':username', $username);
 $stmt->bindParam(':email', $email);
 $stmt->execute();
@@ -24,7 +24,7 @@ if ($count > 0) {
 } else {
     // Siapkan query SQL untuk memasukkan data
     $sql = "INSERT INTO tb_users (username, email, password, role) VALUES (:username, :email, :password, :role)";
-    $stmt = $conn->prepare($sql);
+    $stmt = $pdo->prepare($sql);
 
     // Bind parameter dan eksekusi statement
     $stmt->bindParam(':username', $username);

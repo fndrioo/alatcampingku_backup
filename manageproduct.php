@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = $_POST['description'];
 
         $sql = "INSERT INTO products (nama, kategori, harga, stock, image_url, description) VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([$nama, $kategori, $harga, $stock, $image_url, $description]);
     } elseif (isset($_POST['edit_product'])) {
         // Edit produk
@@ -27,21 +27,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = $_POST['description'];
 
         $sql = "UPDATE products SET nama = ?, kategori = ?, harga = ?, stock = ?, image_url = ?, description = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([$nama, $kategori, $harga, $stock, $image_url, $description, $id]);
     } elseif (isset($_POST['delete_product'])) {
         // Hapus produk
         $id = $_POST['id'];
 
         $sql = "DELETE FROM products WHERE id = ?";
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([$id]);
     }
 }
 
 // Ambil semua produk dari database
 $sql = "SELECT * FROM products";
-$stmt = $conn->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>

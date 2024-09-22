@@ -43,7 +43,7 @@ foreach ($products as $product) {
     $sql = "INSERT INTO products (nama, kategori, harga, stock, image_url, description) 
             VALUES (:nama, :kategori, :harga, :stock, :image_url, :description)";
 
-    $stmt = $conn->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':nama', $nama);
     $stmt->bindParam(':kategori', $kategori);
     $stmt->bindParam(':harga', $harga);

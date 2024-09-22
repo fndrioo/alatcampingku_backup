@@ -1,21 +1,17 @@
 <?php
 session_start();
+include 'koneksi.php';
 
 if (isset($_GET['id'])) {
     $product_id = $_GET['id'];
-    
-    // Hapus produk dari keranjang
-    if (isset($_SESSION['cart'])) {
-        foreach ($_SESSION['cart'] as $key => $item) {
-            if ($item['id'] == $product_id) {
-                unset($_SESSION['cart'][$key]);
-                break;
-            }
-        }
-    }
+    $user_id = $_SESSION['id'];
 
-    // Redirect kembali ke halaman keranjang
-    header('Location: keranjang.php?message=Produk telah dihapus dari keranjang');
-    exit;
+    $sql = "DELETE FROM tb_keranjang WHERE user_id = :user_id AND product_id = :product_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':product_id', $product_id);
+    $stmt->execute();
 }
-?>
+
+header('Location: keranjang.php');
+exit();

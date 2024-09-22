@@ -10,7 +10,7 @@ try {
             ('Tenda Arei', 'Tenda', 35000, 8, 'img/Arei.jpg', 'Tenda kapasitas 4 orang')";
 
     // Langkah 3: Eksekusi query
-    $stmt = $conn->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->execute();
 
     echo "Data berhasil dimasukkan ke database";
@@ -20,5 +20,5 @@ try {
 }
 
 // Langkah 4: Tutup koneksi dengan mengatur koneksi ke null
-$conn = null;
+$pdo = null;
 ?>

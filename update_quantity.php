@@ -16,7 +16,7 @@ if ($quantity < 1) {
 
 // Query untuk memperbarui kuantitas produk dalam keranjang
 $sql = "UPDATE tb_keranjang SET quantity = :quantity WHERE user_id = :user_id AND product_id = :product_id";
-$stmt = $conn->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 $stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);

@@ -5,7 +5,7 @@ require 'koneksi.php'; // Menghubungkan ke database
 if (isset($_POST['add_category'])) {
     $category_name = $_POST['category_name'];
     if (!empty($category_name)) {
-        $stmt = $conn->prepare("INSERT INTO tb_category (name) VALUES (?)");
+        $stmt = $pdo->prepare("INSERT INTO tb_category (name) VALUES (?)");
         $stmt->execute([$category_name]);
         header("Location: managecategory.php");
         exit();
@@ -17,7 +17,7 @@ if (isset($_POST['edit_category'])) {
     $category_id = $_POST['category_id'];
     $category_name = $_POST['category_name'];
     if (!empty($category_name)) {
-        $stmt = $conn->prepare("UPDATE tb_category SET name = ? WHERE id_category = ?");
+        $stmt = $pdo->prepare("UPDATE tb_category SET name = ? WHERE id_category = ?");
         $stmt->execute([$category_name, $category_id]);
         header("Location: managecategory.php");
         exit();
@@ -27,14 +27,14 @@ if (isset($_POST['edit_category'])) {
 // Delete Category
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $stmt = $conn->prepare("DELETE FROM tb_category WHERE id_category = ?");
+    $stmt = $pdo->prepare("DELETE FROM tb_category WHERE id_category = ?");
     $stmt->execute([$delete_id]);
     header("Location: managecategory.php");
     exit();
 }
 
 // Fetch all categories
-$stmt = $conn->prepare("SELECT * FROM tb_category");
+$stmt = $pdo->prepare("SELECT * FROM tb_category");
 $stmt->execute();
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -42,7 +42,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $edit_category = null;
 if (isset($_GET['edit_id'])) {
     $edit_id = $_GET['edit_id'];
-    $stmt = $conn->prepare("SELECT * FROM tb_category WHERE id_category = ?");
+    $stmt = $pdo->prepare("SELECT * FROM tb_category WHERE id_category = ?");
     $stmt->execute([$edit_id]);
     $edit_category = $stmt->fetch(PDO::FETCH_ASSOC);
 }

@@ -8,7 +8,7 @@ if (isset($_POST['create'])) {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password
     $role = $_POST['role'];
     $status = $_POST['status'];
-    $stmt = $conn->prepare("INSERT INTO tb_users (username, email, password, role, status) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO tb_users (username, email, password, role, status) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$username, $email, $password, $role, $status]);
     header("Location: manageuser.php");
     exit();
@@ -22,7 +22,7 @@ if (isset($_POST['update'])) {
     $role = $_POST['role'];
     $status = $_POST['status'];
 
-    $stmt = $conn->prepare("UPDATE tb_users SET username = ?, email = ?, role = ?, status = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE tb_users SET username = ?, email = ?, role = ?, status = ? WHERE id = ?");
     $stmt->execute([$username, $email, $role, $status, $id]);
 
     header("Location: manageuser.php");
@@ -33,7 +33,7 @@ if (isset($_POST['update'])) {
 if (isset($_POST['delete'])) {
     $id = $_POST['id'];
 
-    $stmt = $conn->prepare("DELETE FROM tb_users WHERE id = ?");
+    $stmt = $pdo->prepare("DELETE FROM tb_users WHERE id = ?");
     $stmt->execute([$id]);
 
     header("Location: manageuser.php");
@@ -41,7 +41,7 @@ if (isset($_POST['delete'])) {
 }
 
 // Mengambil data pengguna dari database
-$stmt = $conn->prepare("SELECT id, username, email, role, status FROM tb_users");
+$stmt = $pdo->prepare("SELECT id, username, email, role, status FROM tb_users");
 $stmt->execute();
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>

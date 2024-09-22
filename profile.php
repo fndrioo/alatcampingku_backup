@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_password = $_POST['new_password'];
 
         if (password_verify($old_password, $user['password'])) {
-            // Hash the new password
             $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
             try {
@@ -105,6 +104,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         .wider-container {
             max-width: 80%;
+        }
+        .card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -208,7 +216,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-
     <!-- Footer Start -->
     <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
         <div class="row pt-5">
@@ -284,6 +291,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+
+    <!-- JavaScript for Animation -->
+    <script>
+    // Menambahkan event listener untuk scroll
+    window.addEventListener('scroll', function () {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            // Kode ini bisa dihapus jika tidak ada kebutuhan untuk memeriksa saat scroll
+        });
+    });
+
+    // Jalankan fungsi ini saat halaman pertama kali dimuat
+    window.onload = function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.classList.add('visible'); // Tambahkan kelas 'visible' langsung saat load
+        });
+    };
+</script>
+
 </body>
 
 </html>

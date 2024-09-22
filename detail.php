@@ -73,6 +73,34 @@ if (isset($_POST['add_to_cart'])) {
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <!-- Animasi fade-in -->
+    <style>
+        /* Animasi umum untuk halaman */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Style CSS tambahan */
+        .input-group .btn {
+            width: 60px;
+            /* Sesuaikan dengan kebutuhan */
+            padding: 5px;
+        }
+
+        .input-group .form-control {
+            width: 60px;
+            /* Sesuaikan lebar input agar pas */
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
@@ -93,23 +121,29 @@ if (isset($_POST['add_to_cart'])) {
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 <?php foreach ($categories as $category): ?>
-                                    <a href="product.php?category_id=<?= $category['id_category'] ?>"
-                                        class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                    <?php if ($category['name'] == 'Tenda'): ?>
+                                        <a href="tenda.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Tenda</a>
+                                    <?php elseif ($category['name'] == 'Backpack'): ?>
+                                        <a href="Backpack.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Backpack</a>
+                                    <?php elseif ($category['name'] == 'Peralatan Masak'): ?>
+                                        <a href="PeralatanMasak.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item">Peralatan Masak</a>
+                                    <?php else: ?>
+                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                            class="dropdown-item"><?= htmlspecialchars($category['name']) ?></a>
+                                    <?php endif; ?>
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="orders.php" class="nav-item nav-link">Pesanan</a>
-
-                        <!-- Tampilkan hanya jika pengguna adalah admin -->
-                        <?php if (session_status() === PHP_SESSION_NONE) {
-                            session_start();
-                        }
+                        <?php
                         if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                             <a href="adminpanel.php" class="nav-item nav-link">Admin Panel</a>
                         <?php endif; ?>
-
                         <a href="keranjang.php" class="nav-item nav-link">Keranjang</a>
+                        <a href="profile.php" class="nav-item nav-link">Profil</a>
                         <a href="index.html" class="nav-item nav-link">Logout</a>
                     </div>
                 </div>
@@ -119,7 +153,7 @@ if (isset($_POST['add_to_cart'])) {
     <!-- Navbar End -->
 
     <!-- Detail Start -->
-    <div class="container-fluid pt-5">
+    <div class="container-fluid pt-5 fade-in">
         <div class="container pt-5">
             <div class="row">
                 <div class="col-lg-8 mb-5">
@@ -143,149 +177,99 @@ if (isset($_POST['add_to_cart'])) {
                             <span>Stok Tersedia: <?php echo $product['stock']; ?></span>
                         </div>
                     </div>
-                    <div class="row pt-2">
-                        <div class="col-md-3 col-6 mb-2">
-                            <a class="btn btn-primary px-3" href="transaction.html">Sewa - Rp.
-                                <?php echo number_format($product['harga'], 0, ',', '.'); ?> /Hari</a>
-                        </div>
-                        <div class="col-md-3 col-6 mb-2">
-                            <form action="add_to_cart.php" method="POST" class="d-flex align-items-center">
-                                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                    <div class="col-md-3 col-6 mb-2">
+                        <form action="add_to_cart.php" method="POST" class="d-flex align-items-center">
+                            <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
 
-                                <div class="input-group" style="max-width: 150px;">
-                                    <div class="input-group-prepend">
-                                        <button class="btn btn-outline-secondary" type="button"
-                                            id="decreaseQuantity">-</button>
-                                    </div>
-                                    <input type="number" name="quantity" id="quantity" class="form-control text-center"
-                                        value="1" min="1" max="<?= $product['stock'] ?>" aria-label="Quantity">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button"
-                                            id="increaseQuantity">+</button>
-                                    </div>
+                            <!-- Tombol Tambah ke Keranjang dipindah ke kiri -->
+                            <button type="submit" name="add_to_cart" class="btn btn-success mr-3" style="width: auto;">
+                                Tambahkan ke Keranjang
+                            </button>
+
+                            <!-- Input untuk kuantitas -->
+                            <div class="input-group" style="max-width: 150px;">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        id="decreaseQuantity">-</button>
                                 </div>
-
-                                <button type="submit" name="add_to_cart" class="btn btn-success ml-3"
-                                    style="width: auto;">Tambahkan ke Keranjang</button>
-                            </form>
-
-                        </div>
+                                <input type="number" name="quantity" id="quantity" class="form-control text-center"
+                                    value="1" min="1" max="<?= $product['stock'] ?>" aria-label="Quantity">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button"
+                                        id="increaseQuantity">+</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+    <!-- Detail End -->
 
+    <!-- Footer Start -->
+    <div class="container-fluid bg-secondary text-white mt-5 py-5 px-sm-3 px-md-5">
+        <div class="row pt-5">
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-primary mb-4">Hubungi Kami</h4>
+                <p><i class="fa fa-map-marker-alt mr-2"></i>123 Street, City, Indonesia</p>
+                <p><i class="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
+                <p><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-primary mb-4">Follow Us</h4>
+                <p>Follow us on our social media accounts</p>
+                <div class="d-flex">
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social mr-2" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="btn btn-outline-light btn-social" href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- JavaScript untuk memicu animasi saat halaman dimuat -->
     <script>
-        // Script untuk menambah/mengurangi kuantitas
+        window.addEventListener('load', function () {
+            var elements = document.querySelectorAll('.fade-in');
+            elements.forEach(function (element) {
+                element.classList.add('show');
+            });
+        });
+
+        // Script untuk mengubah jumlah produk
         document.getElementById('decreaseQuantity').addEventListener('click', function () {
             var quantityInput = document.getElementById('quantity');
-            if (quantityInput.value > 1) {
-                quantityInput.value--;
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1;
             }
         });
 
         document.getElementById('increaseQuantity').addEventListener('click', function () {
             var quantityInput = document.getElementById('quantity');
             var maxValue = parseInt(quantityInput.getAttribute('max'));
-            if (quantityInput.value < maxValue) {
-                quantityInput.value++;
+            var currentValue = parseInt(quantityInput.value);
+            if (currentValue < maxValue) {
+                quantityInput.value = currentValue + 1;
             }
         });
     </script>
-    <!-- Detail End -->
 
-    <!-- Footer Start -->
-    <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
-        <div class="row pt-5">
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Get In Touch</h4>
-                <p class="mb-2"><i class="fa fa-map-marker-alt text-white mr-3"></i>123 Street, New York, USA</p>
-                <p class="mb-2"><i class="fa fa-phone-alt text-white mr-3"></i>+012 345 67890</p>
-                <p><i class="fa fa-envelope text-white mr-3"></i>info@example.com</p>
-                <h6 class="text-uppercase text-white py-2">Follow Us</h6>
-                <div class="d-flex justify-content-start">
-                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-lg btn-dark btn-lg-square" href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Usefull Links</h4>
-                <div class="d-flex flex-column justify-content-start">
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private
-                        Policy</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term &
-                        Conditions</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member
-                        Registration</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate
-                        Programme</a>
-                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return &
-                        Refund</a>
-                    <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FQAs</a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-5">
-                <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
-                <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr sed
-                    kasd et</p>
-                <div class="w-100 mb-3">
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;"
-                            placeholder="Your Email">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary text-uppercase px-3">Sign Up</button>
-                        </div>
-                    </div>
-                </div>
-                <i>Lorem sit sed elitr sed kasd et</i>
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
-        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
-        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
-    </div>
-    <!-- (Sama dengan kode sebelumnya) -->
-
-    <!-- JavaScript Libraries -->
-    <script src="lib/jquery/jquery.min.js"></script>
+    <!-- Libraries & Template Javascript -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!--Style CSS-->
-    <style>
-        .input-group .btn {
-            width: 60px;
-            /* Sesuaikan dengan kebutuhan */
-            padding: 5px;
-        }
-
-        .input-group .form-control {
-            width: 60px;
-            /* Sesuaikan lebar input agar pas */
-            text-align: center;
-        }
-    </style>
-
-    <!-- Customized JavaScript -->
     <script src="js/main.js"></script>
-    <script>
-        document.getElementById('decreaseQuantity').addEventListener('click', function () {
-            var quantityInput = document.querySelector('input[name="quantity"]');
-            if (quantityInput.value > 1) {
-                quantityInput.value--;
-            }
-        });
-
-        document.getElementById('increaseQuantity').addEventListener('click', function () {
-            var quantityInput = document.querySelector('input[name="quantity"]');
-            quantityInput.value++;
-        });
-    </script>
 </body>
 
 </html>

@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
 
     // Check if the user is found
-    $stmt = $conn->prepare("SELECT * FROM tb_users WHERE username = :username");
+    $stmt = $pdo->prepare("SELECT * FROM tb_users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Cek apakah username atau email sudah ada
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM tb_users WHERE username = :username OR email = :email");
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM tb_users WHERE username = :username OR email = :email");
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
     $stmt->execute();
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Siapkan query SQL untuk memasukkan data
-    $stmt = $conn->prepare("INSERT INTO tb_users (username, email, password, role) VALUES (:username, :email, :password, :role)");
+    $stmt = $pdo->prepare("INSERT INTO tb_users (username, email, password, role) VALUES (:username, :email, :password, :role)");
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':email', $email);
     $stmt->bindParam(':password', $hashed_password);

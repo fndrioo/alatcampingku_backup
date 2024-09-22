@@ -5,6 +5,7 @@ include 'koneksi.php'; // Pastikan koneksi database ada
 if (isset($_POST['product_id'], $_POST['quantity'])) {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
+    $user_id = $_SESSION['id']; // Ambil user_id dari session
 
     // Ambil informasi produk dari database
     $stmt = $pdo->prepare("SELECT nama, harga, image_url FROM products WHERE id = :id");
@@ -13,31 +14,13 @@ if (isset($_POST['product_id'], $_POST['quantity'])) {
     $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($product) {
-        // Inisialisasi keranjang jika belum ada
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-
-        // Cek apakah produk sudah ada di keranjang
-        $found = false;
-        foreach ($_SESSION['cart'] as &$item) {
-            if ($item['id'] == $product_id) {
-                $item['quantity'] += $quantity; // Update jumlah
-                $found = true;
-                break;
-            }
-        }
-
-        // Jika produk belum ada, tambahkan produk baru
-        if (!$found) {
-            $_SESSION['cart'][] = [
-                'id' => $product_id,
-                'nama' => $product['nama'],
-                'harga' => $product['harga'],
-                'image_url' => $product['image_url'],
-                'quantity' => $quantity
-            ];
-        }
+        // Tambahkan produk ke tabel tb_keranjang
+        $stmt = $pdo->prepare("INSERT INTO tb_keranjang (user_id, product_id, quantity) VALUES (:user_id, :product_id, :quantity)
+            ON DUPLICATE KEY UPDATE quantity = quantity + :quantity");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':product_id', $product_id);
+        $stmt->bindParam(':quantity', $quantity);
+        $stmt->execute();
 
         // Redirect atau set notifikasi
         header('Location: keranjang.php?message=Produk telah ditambahkan ke keranjang');
