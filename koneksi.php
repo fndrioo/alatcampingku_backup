@@ -1,8 +1,15 @@
 <?php
+// File koneksi.php
+
+$host = 'localhost';
+$dbname = 'db_alatacampingku';
+$username = 'root';
+$password = '';
+
 try {
-    $conn = new PDO("mysql:host=localhost;dbname=db_alatacampingku", "root", "");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    die("Error connecting to database: " . $e->getMessage());
 }
 ?>

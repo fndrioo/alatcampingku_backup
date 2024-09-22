@@ -4,13 +4,13 @@ include 'koneksi.php'; // Koneksi ke database
 
 // Ambil semua produk dari database
 $sql = "SELECT * FROM products";
-$stmt = $conn->prepare($sql);
+$stmt = $pdo->prepare($sql);
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Ambil semua kategori dari database
 $sql_categories = "SELECT * FROM tb_category";
-$stmt_categories = $conn->prepare($sql_categories);
+$stmt_categories = $pdo->prepare($sql_categories);
 $stmt_categories->execute();
 $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -96,10 +96,10 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                                         <a href="tenda.php?category_id=<?= $category['id_category'] ?>"
                                             class="dropdown-item">Tenda</a>
                                     <?php elseif ($category['name'] == 'Backpack'): ?>
-                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                        <a href="Backpack.php?category_id=<?= $category['id_category'] ?>"
                                             class="dropdown-item">Backpack</a>
                                     <?php elseif ($category['name'] == 'Peralatan Masak'): ?>
-                                        <a href="product.php?category_id=<?= $category['id_category'] ?>"
+                                        <a href="PeralatanMasak.php?category_id=<?= $category['id_category'] ?>"
                                             class="dropdown-item">Peralatan Masak</a>
                                     <?php else: ?>
                                         <a href="product.php?category_id=<?= $category['id_category'] ?>"
@@ -108,7 +108,6 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="orders.php" class="nav-item nav-link">Pesanan</a>
 
                         <!-- Tampilkan hanya jika pengguna adalah admin -->
@@ -175,7 +174,12 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
     <div id="produkUnggulan" class="container mt-5">
         <h2>Our Products</h2>
         <div class="row">
-            <?php foreach ($products as $product): ?>
+            <?php
+            // Ambil hanya 3 produk pertama dari array $products
+            $featured_products = array_slice($products, 0, 3);
+
+            // Tampilkan 3 produk yang diambil
+            foreach ($featured_products as $product): ?>
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <img class="card-img-top" src="<?= htmlspecialchars($product['image_url']) ?>"
@@ -193,8 +197,9 @@ $categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             <?php endforeach; ?>
         </div>
-
     </div>
+    <!-- Produk Unggulan End -->
+
     <!-- Produk Unggulan End -->
 
     <!-- Footer Start -->

@@ -157,8 +157,8 @@ if (isset($_POST['add_to_cart'])) {
                                         <button class="btn btn-outline-secondary" type="button"
                                             id="decreaseQuantity">-</button>
                                     </div>
-                                    <input type="number" name="quantity" class="form-control text-center" value="1"
-                                        min="1" max="<?= $product['stock'] ?>" aria-label="Quantity">
+                                    <input type="number" name="quantity" id="quantity" class="form-control text-center"
+                                        value="1" min="1" max="<?= $product['stock'] ?>" aria-label="Quantity">
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="button"
                                             id="increaseQuantity">+</button>
@@ -168,13 +168,31 @@ if (isset($_POST['add_to_cart'])) {
                                 <button type="submit" name="add_to_cart" class="btn btn-success ml-3"
                                     style="width: auto;">Tambahkan ke Keranjang</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+
+    <script>
+        // Script untuk menambah/mengurangi kuantitas
+        document.getElementById('decreaseQuantity').addEventListener('click', function () {
+            var quantityInput = document.getElementById('quantity');
+            if (quantityInput.value > 1) {
+                quantityInput.value--;
+            }
+        });
+
+        document.getElementById('increaseQuantity').addEventListener('click', function () {
+            var quantityInput = document.getElementById('quantity');
+            var maxValue = parseInt(quantityInput.getAttribute('max'));
+            if (quantityInput.value < maxValue) {
+                quantityInput.value++;
+            }
+        });
+    </script>
     <!-- Detail End -->
 
     <!-- Footer Start -->

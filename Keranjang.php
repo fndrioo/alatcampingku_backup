@@ -55,6 +55,18 @@ if (isset($_SESSION['cart'])) {
         .product-image {
             width: 150px;
         }
+
+        /* Animasi masuk */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -107,170 +119,148 @@ if (isset($_SESSION['cart'])) {
                 </div>
             </nav>
         </div>
-        </div>
+    </div>
 
-        <!-- Navbar End -->
+    <!-- Navbar End -->
 
-        <!-- Keranjang Start -->
+    <!-- Keranjang Start -->
+    <div class="container fade-in">
+        <h2 class="text-center mb-4">Keranjang Belanja</h2>
+
+        <?php if (isset($_GET['message'])): ?>
+            <div class="alert alert-success"><?php echo htmlspecialchars($_GET['message']); ?></div>
+        <?php endif; ?>
+
         <?php
-        include 'koneksi.php'; // Koneksi database
-        
-        if (!isset($_SESSION['id'])) {
-            die('User belum login.');
-        }
-
-        $user_id = $_SESSION['id'];
-
-        // Query untuk mengambil data keranjang beserta informasi produk
-        $sql = "SELECT tb_keranjang.quantity, tb_keranjang.product_id, tb_keranjang.created_at, 
-            products.nama, products.harga, products.image_url 
-            FROM tb_keranjang 
-            JOIN products ON tb_keranjang.product_id = products.id 
-            WHERE tb_keranjang.user_id = :user_id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        if (count($result) > 0) {
+        if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
+            echo "<p class='text-center'>Keranjang kosong!</p>";
+        } else {
             $total = 0;
+            echo '<table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Produk</th>
+                            <th>Nama</th>
+                            <th>Harga</th>
+                            <th>Jumlah</th>
+                            <th>Total</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
 
-            echo '<div class="container d-flex justify-content-center align-items-center py-5" style="min-height: 70vh;">';
-            echo '<div class="table-responsive">';
-            echo '<h2 class="text-center mb-4">Keranjang Belanja</h2>';
-            echo '<table class="table table-striped table-custom-width">
-            <thead>
-                <tr>
-                    <th scope="col">Produk</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">Harga</th>
-                    <th scope="col">Jumlah</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>';
-
-            foreach ($result as $item) {
+            foreach ($_SESSION['cart'] as $item) {
                 $item_total = $item['harga'] * $item['quantity'];
                 $total += $item_total;
 
                 echo "<tr>
-                <td><img src='{$item['image_url']}' alt='Product' class='product-image'></td>
-                <td>{$item['nama']}</td>
-                <td>Rp. " . number_format($item['harga'], 0, ',', '.') . "</td>
-                <td>
-                    <form method='POST' action='update_quantity.php' class='form-inline'>
-                        <input type='hidden' name='product_id' value='{$item['product_id']}'>
-                        <input type='number' name='quantity' class='form-control' value='{$item['quantity']}' min='1'>
-                        <input type='hidden' class='btn btn-primary btn-sm ml-2'></input>
-                    </form>
-                </td>
-                <td>Rp. " . number_format($item_total, 0, ',', '.') . "</td>
-                <td><a href='hapus_keranjang.php?id={$item['product_id']}' class='btn btn-danger'>Hapus</a></td>
-            </tr>";
+                    <td><img src='{$item['image_url']}' alt='Product' class='product-image'></td>
+                    <td>{$item['nama']}</td>
+                    <td>Rp. " . number_format($item['harga'], 0, ',', '.') . "</td>
+                    <td>{$item['quantity']}</td>
+                    <td>Rp. " . number_format($item_total, 0, ',', '.') . "</td>
+                    <td><a href='hapus_keranjang.php?id={$item['id']}' class='btn btn-danger'>Hapus</a></td>
+                </tr>";
             }
 
-            echo "</tbody></table>";
-            echo "<div class='d-flex justify-content-right'>
-            <h4>Total: Rp. " . number_format($total, 0, ',', '.') . "</h4>
-          </div>";
-
-            // Tambahkan tombol checkout
-            echo '<div class="d-flex justify-content-between mt-4">
-            <a href="indexx.php" class="btn btn-secondary">Lanjut Belanja</a>
-            <a href="transaction.php" class="btn btn-primary">Checkout</a>
-          </div>';
-            echo '</div>';
-            echo '</div>';
-        } else {
-            echo "<div class='container'><p class='text-center'>Keranjang kosong!</p></div>";
+            echo '</tbody></table>';
+            echo "<h4>Total: Rp. " . number_format($total, 0, ',', '.') . "</h4>";
+            echo '<a href="indexx.php" class="btn btn-secondary">Lanjut Belanja</a>';
+            echo '<a href="transaksi.php" class="btn btn-primary">Checkout</a>';
         }
         ?>
-        <!-- Keranjang End -->
+    </div>
+    <!-- Keranjang End -->
 
-        <!-- Footer Start -->
-        <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
-            <div class="row pt-5">
-                <div class="col-lg-3 col-md-6 mb-5">
-                    <h4 class="text-uppercase text-light mb-4">Get In Touch</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt text-white mr-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt text-white mr-3"></i>+012 345 67890</p>
-                    <p><i class="fa fa-envelope text-white mr-3"></i>info@example.com</p>
-                    <h6 class="text-uppercase text-white py-2">Follow Us</h6>
-                    <div class="d-flex justify-content-start">
-                        <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i
-                                class="fab fa-linkedin-in"></i></a>
-                        <a class="btn btn-lg btn-dark btn-lg-square" href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-5">
-                    <h4 class="text-uppercase text-light mb-4">Usefull Links</h4>
-                    <div class="d-flex flex-column justify-content-start">
-                        <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private
-                            Policy</a>
-                        <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term &
-                            Conditions</a>
-                        <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member
-                            Registration</a>
-                        <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate
-                            Programme</a>
-                        <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return &
-                            Refund</a>
-                        <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FQAs</a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-5">
-                    <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
-                    <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr
-                        sed
-                        kasd et</p>
-                    <div class="w-100 mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;"
-                                placeholder="Your Email">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary text-uppercase px-3">Sign Up</button>
-                            </div>
-                        </div>
-                    </div>
-                    <i>Lorem sit sed elitr sed kasd et</i>
+    <!-- Footer Start -->
+    <div class="container-fluid bg-secondary py-5 px-sm-3 px-md-5" style="margin-top: 90px;">
+        <div class="row pt-5">
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-light mb-4">Get In Touch</h4>
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-white mr-3"></i>123 Street, New York, USA</p>
+                <p class="mb-2"><i class="fa fa-phone-alt text-white mr-3"></i>+012 345 67890</p>
+                <p><i class="fa fa-envelope text-white mr-3"></i>info@example.com</p>
+                <h6 class="text-uppercase text-white py-2">Follow Us</h6>
+                <div class="d-flex justify-content-start">
+                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-lg btn-dark btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-lg btn-dark btn-lg-square" href="#"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-light mb-4">Usefull Links</h4>
+                <div class="d-flex flex-column justify-content-start">
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Private
+                        Policy</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Term &
+                        Conditions</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>New Member
+                        Registration</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Affiliate
+                        Programme</a>
+                    <a class="text-body mb-2" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Return &
+                        Refund</a>
+                    <a class="text-body" href="#"><i class="fa fa-angle-right text-white mr-2"></i>Help & FQAs</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-5">
+                <h4 class="text-uppercase text-light mb-4">Newsletter</h4>
+                <p class="mb-4">Volup amet magna clita tempor. Tempor sea eos vero ipsum. Lorem lorem sit sed elitr
+                    sed
+                    kasd et</p>
+                <div class="w-100 mb-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-dark border-dark" style="padding: 25px;"
+                            placeholder="Your Email">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary text-uppercase px-3">Sign Up</button>
+                        </div>
+                    </div>
+                </div>
+                <i>Lorem sit sed elitr sed kasd et</i>
+            </div>
         </div>
-        <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
-            <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
+    </div>
+    <div class="container-fluid bg-dark py-4 px-sm-3 px-md-5">
+        <p class="mb-2 text-center text-body">&copy; <a href="#">AlatCampingKu</a>. All Rights Reserved.</p>
 
-            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-            <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
-        </div>
-        <!-- Footer End -->
+        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+        <p class="m-0 text-center text-body">Designed by <a href="https://htmlcodex.com">HTML Codex</a></p>
+    </div>
+    <!-- Footer End -->
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-chevron-up"></i></a>
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-chevron-up"></i></a>
 
-        <!-- JavaScript Libraries -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-        <script src="lib/tempusdominus/js/moment.min.js"></script>
-        <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
-        <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-        <!-- Customized Bootstrap Scripts -->
-        <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- Customized Bootstrap Scripts -->
+    <script src="js/bootstrap.bundle.min.js"></script>
 
-        <!-- Template Scripts -->
-        <script src="js/main.js"></script>
+    <!-- Template Scripts -->
+    <script src="js/main.js"></script>
 
-        <!--css-->
-        <style>
-            .container-margin-top {
-                margin-top: 90px;
-                /* Sesuaikan dengan margin-bottom footer jika diperlukan */
-            }
-        </style>
+    <!-- Selfmade Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.querySelector('.container');
+            container.classList.add('fade-in', 'visible');
+        });
+    </script>
+
+    <!--css-->
+    <style>
+        .container-margin-top {
+            margin-top: 90px;
+            /* Sesuaikan dengan margin-bottom footer jika diperlukan */
+        }
+    </style>
 </body>
 
 </html>
