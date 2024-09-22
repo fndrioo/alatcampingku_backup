@@ -19,6 +19,11 @@ $sql = "SELECT tb_keranjang.quantity, tb_keranjang.product_id, tb_keranjang.crea
 $stmt = $pdo->prepare($sql);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
+$sql_categories = "SELECT * FROM tb_category";
+$stmt_categories = $pdo->prepare($sql_categories);
+$stmt_categories->execute();
+$categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
+
 if ($stmt->execute()) {
     $cart_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -99,7 +104,7 @@ foreach ($cart_items as $item) {
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="position-relative px-lg-5" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
-                <a href="indexx.html" class="navbar-brand">
+                <a href="indexx.php" class="navbar-brand">
                     <h1 class="text-uppercase text-primary mb-1">AlatCampingKu</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -107,7 +112,7 @@ foreach ($cart_items as $item) {
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="indexx.html" class="nav-item nav-link">Home</a>
+                        <a href="indexx.php" class="nav-item nav-link">Home</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Kategori Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">

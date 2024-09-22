@@ -1,3 +1,27 @@
+<?php
+// Inisialisasi koneksi PDO
+$host = 'localhost';
+$dbname = 'db_alatacampingku'; // Ganti dengan nama database Anda
+$username = 'root'; // Sesuaikan dengan username database Anda
+$password = ''; // Sesuaikan dengan password database Anda
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Koneksi gagal: " . $e->getMessage());
+}
+
+$sql_categories = "SELECT * FROM tb_category";
+$stmt_categories = $pdo->prepare($sql_categories);
+$stmt_categories->execute();
+$categories = $stmt_categories->fetchAll(PDO::FETCH_ASSOC);
+
+// Query untuk mengambil data produk kategori "Tenda"
+$stmt = $pdo->query("SELECT * FROM products WHERE kategori = 'Tenda'");
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC); // Simpan hasil query ke dalam variabel $products
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,7 +59,7 @@
     <div class="container-fluid position-relative nav-bar p-0">
         <div class="position-relative px-lg-5" style="z-index: 9;">
             <nav class="navbar navbar-expand-lg bg-secondary navbar-dark py-3 py-lg-0 pl-3 pl-lg-5">
-                <a href="indexx.html" class="navbar-brand">
+                <a href="indexx.php" class="navbar-brand">
                     <h1 class="text-uppercase text-primary mb-1">AlatCampingKu</h1>
                 </a>
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
@@ -43,9 +67,10 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-between px-3" id="navbarCollapse">
                     <div class="navbar-nav ml-auto py-0">
-                        <a href="indexx.html" class="nav-item nav-link">Home</a>
+                        <a href="indexx.php" class="nav-item nav-link">Home</a>
                         <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Kategori Peralatan</a>
+                            <a href="#" class="nav-link dropdown-toggle active" data-toggle="dropdown">Kategori
+                                Peralatan</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 <?php foreach ($categories as $category): ?>
                                     <?php if ($category['name'] == 'Tenda'): ?>
@@ -80,58 +105,47 @@
     <!-- Navbar End -->
 
 
-
     <!-- Rent A Car Start -->
-    <div class="container-fluid py-5">
-        <div class="container pt-5 pb-3">
-            <h1 class="display-4 text-uppercase text-center mb-5">Peralatan Masak</h1>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="img/portablestove.png" alt="">
-                        <h4 class="text-uppercase mb-4">Kompor 1 Tungku</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <span>Kapasitas 1 Tungku</span>
-                                <br><span>Menggunakan Gas</span></br>
-                                <br><span>Rp. 20.000 / Hari</span></br>
+    <div id="Peralatan Masak" class="container mt-5">
+        <h2>Produk Peralatan Masak</h2>
+        <div class="row">
+            <?php
+            // Hubungkan ke database
+            include 'koneksi.php';
+
+            // Query untuk mengambil produk dengan kategori 'Peralatan Masak'
+            $sql = "SELECT id, nama, harga, stock, image_url FROM products WHERE kategori = 'Peralatan Masak' LIMIT 3";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute();
+
+            // Ambil hasil query
+            $peralatan_masak_products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Cek apakah ada produk yang ditemukan
+            if ($peralatan_masak_products):
+                // Loop melalui produk-produk peralatan masak dan tampilkan
+                foreach ($peralatan_masak_products as $product): ?>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img class="card-img-top" src="<?= htmlspecialchars($product['image_url']) ?>"
+                                alt="<?= htmlspecialchars($product['nama']) ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= htmlspecialchars($product['nama']) ?></h5>
+                                <p class="card-text">Rp. <?= number_format($product['harga'], 0, ',', '.') ?></p>
+                                <p class="card-text">
+                                    Stock: <?= htmlspecialchars($product['stock']) ?>
+                                    <a href="detail.php?id=<?= $product['id'] ?>" class="btn btn-primary btn-sm ml-2">Detail
+                                        Produk</a>
+                                </p>
                             </div>
                         </div>
-                        <a class="btn btn-primary px-3" href="detail.html">Lihat Lebih</a>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="img/kompor2tungku.png" alt="">
-                        <h4 class="text-uppercase mb-4">Kompor Rinnai</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <span>Kapasitas 2 Tungku</span>
-                                <br><span>Menggunakan Gas</span></br>
-                                <br><span>Rp. 50.000 / Hari</span></br>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="detail.html">Lihat Lebih</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-2">
-                    <div class="rent-item mb-4">
-                        <img class="img-fluid mb-4" src="img/komporcosmos.jpg" alt="">
-                        <h4 class="text-uppercase mb-4">Kompor Cosmos</h4>
-                        <div class="d-flex justify-content-center mb-4">
-                            <div class="px-2">
-                                <span>Kapasitas 1 Tungku</span>
-                                <br><span>Menggunakan Gas</span></br>
-                                <br><span>Rp. 35.000 / Hari</span></br>
-                            </div>
-                        </div>
-                        <a class="btn btn-primary px-3" href="detail.html">Lihat Lebih</a>
-                    </div>
-                </div>
-            </div>
+                <?php endforeach;
+            else: ?>
+                <p>Tidak ada produk peralatan masak yang tersedia saat ini.</p>
+            <?php endif; ?>
         </div>
     </div>
-
     <!-- Rent A Car End -->
 
 

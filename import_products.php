@@ -2,31 +2,31 @@
 session_start();
 include 'koneksi.php';
 
-// Data produk yang akan dimasukkan ke dalam tabel `products`
+// Data produk peralatan masak yang akan dimasukkan ke dalam tabel `products`
 $products = [
     [
-        'nama' => 'Tenda Patagonia',
-        'kategori' => 'Tenda',
-        'harga' => 50000,
-        'stock' => 10,
-        'image_url' => 'img/TendaCamping.png',
-        'description' => 'Tenda Patagonia yang nyaman dan kuat, cocok untuk semua kondisi cuaca.'
-    ],
-    [
-        'nama' => 'Tas Decathlon 30L',
-        'kategori' => 'Tas Gunung',
-        'harga' => 30000,
-        'stock' => 15,
-        'image_url' => 'img/backpack1.png',
-        'description' => 'Tas gunung dengan kapasitas 30L, ideal untuk perjalanan singkat.'
-    ],
-    [
-        'nama' => 'Kompor Portable',
+        'nama' => 'Kompor 1 Tungku',
         'kategori' => 'Peralatan Masak',
         'harga' => 20000,
-        'stock' => 20,
+        'stock' => 10,
         'image_url' => 'img/portablestove.png',
-        'description' => 'Kompor portable yang praktis dan mudah digunakan di segala medan.'
+        'description' => 'Kompor dengan 1 tungku, menggunakan gas, praktis untuk perjalanan camping.'
+    ],
+    [
+        'nama' => 'Kompor Rinnai 2 Tungku',
+        'kategori' => 'Peralatan Masak',
+        'harga' => 50000,
+        'stock' => 8,
+        'image_url' => 'img/kompor2tungku.png',
+        'description' => 'Kompor Rinnai dengan 2 tungku, kuat dan efisien, cocok untuk memasak di alam bebas.'
+    ],
+    [
+        'nama' => 'Kompor Cosmos 1 Tungku',
+        'kategori' => 'Peralatan Masak',
+        'harga' => 35000,
+        'stock' => 12,
+        'image_url' => 'img/komporcosmos.jpg',
+        'description' => 'Kompor Cosmos dengan 1 tungku, ringan dan menggunakan gas, ideal untuk camping.'
     ]
 ];
 
